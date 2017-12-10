@@ -1,0 +1,7 @@
+@import "react-toolbox/lib/app_bar/theme.css";
+
+.appBar {
+  background-color: var(--palette-blue-900) !important;
+  /*margin-right: 1rem;*/
+  fill: #fff;
+}

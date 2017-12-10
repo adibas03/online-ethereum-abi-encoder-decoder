@@ -1,0 +1,56 @@
+@import 'react-toolbox/lib/colors.css';
+@import 'react-toolbox/lib/variables.css';
+
+:root {
+  --offset: calc(1.8 * var(--unit));
+  --button-floating-height: calc(5.6 * var(--unit));
+  --appbar-height: calc(6.4 * var(--unit));
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+.app {
+  padding: var(--offset);
+
+  & > section,
+  & > div > section {
+    background-color: var(--color-white);
+    box-shadow: 0 1px 2px color(var(--color-black) a(25%));
+    margin-bottom: var(--offset);
+    padding: var(--offset);
+
+    & > h5 {
+      color: rgb(48, 63, 159);
+      font-size: 20px;
+      line-height: 1;
+      margin: 0 0 10px;
+
+      &:not(:first-child) {
+        margin-top: calc(2 * var(--offset));
+      }
+    }
+
+    & > p {
+      font-size: 14px;
+      line-height: 24px;
+      margin: calc(var(--offset) / 4) 0;
+      opacity: 0.6;
+    }
+
+    & [data-react-toolbox='card'] {
+      display: inline-block;
+      margin: var(--offset) var(--offset) 0 0;
+    }
+  }
+
+  &::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
+}
+
+.textCenter{
+  text-align:center
+}

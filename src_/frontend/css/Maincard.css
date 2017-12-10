@@ -1,0 +1,19 @@
+@import "react-toolbox/lib/card/theme.css";
+
+.card{
+  min-height: 30rem;
+  width: 97% !important;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: #eeeeee;
+}
+
+.noheightcard{
+  min-height: auto;
+}
+
+.media{
+  height:40rem;
+}
