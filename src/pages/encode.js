@@ -15,6 +15,7 @@ import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 
 import ethers from 'ethers';
+import ValidTypes from '../config/types';
 
 class Encoder extends Component{
   constructor(props) {
@@ -26,17 +27,41 @@ class Encoder extends Component{
 
     this.state = {
       types : '',
+      error:{}
       };
   }
 
   interface = new ethers.Interface([]);
 
+  testRegExp = (search, array)=>{
+    var found = 0;
+    array.forEach(function(a){
+      if(new RegExp(a).test(search))
+      found++;
+    })
+    return found;
+  }
+
   typeUpdated = name => event => {
-    console.log(event.target,Object.keys(event.target), name)
     const val = event.target.value;
-    this.handleChange(this,event);
-
-
+    this.handleChange(name)(event);
+    var array = ValidTypes.map(function(t){
+      return t+'*';
+    })
+    var that = this,clean = true;
+    val.split(',').forEach(function(v){
+        if(that.testRegExp(v,array) < 1){
+          clean = false;
+          var error = {};error[name] = true;
+          var state = {error:Object.assign(that.state.error,error)};
+          return that.setState(state);
+        }
+    })
+    if(clean){
+      var error = {};error[name] = false;
+      var state = {error:Object.assign(that.state.error,error)};
+      return that.setState(state);
+    }
   }
 
   handleRequestClose = () => {
@@ -52,13 +77,11 @@ class Encoder extends Component{
   };
 
   handleChange = name => event => {
-    console.log(name,event)
     this.setState({ [name]: event.target.value });
   };
 
   render(){
     const { classes } = this.props
-    console.log(this)
 
     return(
       <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
@@ -72,6 +95,7 @@ class Encoder extends Component{
                   shrink: true,
                 }}
                 value={this.state.types}
+                error={this.state.error.types}
                 onChange={this.typeUpdated('types')}
                 helperText="Add the value types, each seperated by a comma"
                 fullWidth
