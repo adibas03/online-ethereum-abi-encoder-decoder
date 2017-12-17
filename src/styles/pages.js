@@ -18,6 +18,12 @@ const styles = {
   rightPadding:{
     paddingRight:15
   },
+  right:{
+    float:'right'
+  },
+  left:{
+    float:'left'
+  },
   width95:{
     width:'95%',
     marginLeft:'auto',
@@ -39,6 +45,9 @@ const styles = {
   actionFormControl: {
     width:'94%',
   },
+  button:{
+    margin: '8px',
+  }
 
 };
 

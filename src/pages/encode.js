@@ -29,7 +29,8 @@ class Encoder extends Component{
       types : '',
       values: '',
       encoded: '',
-      error:{}
+      error:{},
+      submitted:false
       };
   }
 
@@ -74,9 +75,8 @@ class Encoder extends Component{
     if(clean){
       var error = {};error['types'] = false;
       var state = {error:Object.assign(that.state.error,error)};
-      that.setState(state);
+      return that.setState(state);
     }
-    return this.encodeData();
   }
 
   valueUpdated = event => {
@@ -91,13 +91,13 @@ class Encoder extends Component{
       error['values'] = false;
 
     var state = {error:Object.assign(this.state.error,error)};
-    this.setState(state);
-    return this.encodeData();
+    return this.setState(state);
   }
 
   encodeData = ()=>{
     if(!this.formFilled() || this.errorExists() )
       return;
+      this.setState({ submitted: true });
     try{
       var types = this.state.types.split(',');
       var values = this.state.values.split(',');
@@ -136,7 +136,7 @@ class Encoder extends Component{
   };
 
   handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
+    this.setState({ [name]: event.target.value,submitted: false });
   };
 
   render(){
@@ -174,10 +174,15 @@ class Encoder extends Component{
                   fullWidth
                   margin="normal"
                 />
+              <div className={classes.topPadding}>
+                <Button raised color="primary" className={classes.button+' '+classes.right} onClick={this.encodeData}>
+                  Encode
+                </Button>
+              </div>
               </FormControl>
             </div>
         </Card>
-        {this.formFilled() && !this.errorExists() &&
+        {this.formFilled() && !this.errorExists() && this.state.submitted &&
             <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
               <TextField
                 id="full-width"
