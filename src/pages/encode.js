@@ -27,6 +27,8 @@ class Encoder extends Component{
 
     this.state = {
       types : '',
+      values: '',
+      encoded: '',
       error:{}
       };
   }
@@ -42,26 +44,81 @@ class Encoder extends Component{
     return found;
   }
 
-  typeUpdated = name => event => {
+  typesSet = () =>{
+    let types = this.state.types;
+    types= types.split(',');
+    for (var t=types.length;t>0;t--){
+      if(!types[t])
+        types.splice(t,1);
+    }
+    return this.setState({types:types.join(',')});
+  }
+
+  typeUpdated = event => {
     const val = event.target.value;
-    this.handleChange(name)(event);
+    this.handleChange('types')(event);
     var array = ValidTypes.map(function(t){
       return t+'*';
     })
     var that = this,clean = true;
-    val.split(',').forEach(function(v){
+    var vals = val.split(',');
+    vals.forEach(function(v,id){
+      if(!(id == vals.length-1 && v == '' ))
         if(that.testRegExp(v,array) < 1){
           clean = false;
-          var error = {};error[name] = true;
+          var error = {};error['types'] = true;
           var state = {error:Object.assign(that.state.error,error)};
           return that.setState(state);
         }
     })
     if(clean){
-      var error = {};error[name] = false;
+      var error = {};error['types'] = false;
       var state = {error:Object.assign(that.state.error,error)};
-      return that.setState(state);
+      that.setState(state);
     }
+    return this.encodeData();
+  }
+
+  valueUpdated = event => {
+    this.typesSet()
+    const val = event.target.value;
+    this.handleChange('values')(event);
+
+    var vals = val.split(','),error = {};
+    if(vals.length !== this.state.types.split(',').length )
+      error['values'] = true;
+    else
+      error['values'] = false;
+
+    var state = {error:Object.assign(this.state.error,error)};
+    this.setState(state);
+    return this.encodeData();
+  }
+
+  encodeData = ()=>{
+    if(!this.formFilled() || this.errorExists() )
+      return;
+    try{
+      var types = this.state.types.split(',');
+      var values = this.state.values.split(',');
+      var encoded = ethers.Interface.encodeParams(types, values)
+      this.setState({ encoded: encoded.substring(2) });
+    }
+    catch(e){
+      console.error(e);
+    }
+  }
+
+  formFilled = () =>{
+    return this.state.types && this.state.values;
+  }
+
+  errorExists = () =>{
+    for(var i in this.state.errors){
+      if(this.state.errorsp[i])
+        return true;
+    }
+    return false;
   }
 
   handleRequestClose = () => {
@@ -84,26 +141,57 @@ class Encoder extends Component{
     const { classes } = this.props
 
     return(
-      <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
+      <div>
+        <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
 
-          <div className={classes.topPadding+' '+classes.bottomMargin} >
-            <FormControl className = {classes.formControl+' '+classes.actionFormControl} >
+            <div className={classes.topPadding+' '+classes.bottomMargin} >
+              <FormControl className = {classes.formControl+' '+classes.actionFormControl} >
+                <TextField
+                  id="full-width"
+                  label="Argument Types"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={this.state.types}
+                  error={this.state.error.types}
+                  onChange={this.typeUpdated}
+                  helperText="Add the value types, each seperated by a comma"
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  id="full-width"
+                  label="Argument values"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={this.state.values}
+                  error={this.state.error.values}
+                  onChange={this.valueUpdated}
+                  helperText="Add the values to match the number of types indicated above, each seperated by a comma"
+                  fullWidth
+                  margin="normal"
+                />
+              </FormControl>
+            </div>
+        </Card>
+        {this.formFilled() && !this.errorExists() &&
+            <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
               <TextField
                 id="full-width"
-                label="Argument Types"
+                multiline
+                label="Encoded"
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={this.state.types}
-                error={this.state.error.types}
-                onChange={this.typeUpdated('types')}
-                helperText="Add the value types, each seperated by a comma"
+                value={this.state.encoded}
+                disabled
+                helperText="Abi encoded arguments"
                 fullWidth
                 margin="normal"
               />
-            </FormControl>
-          </div>
-      </Card>
+        </Card>}
+      </div>
     )
   }
 }
