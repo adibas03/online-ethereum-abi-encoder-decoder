@@ -37,7 +37,7 @@ class Encoder extends Component{
   interface = new ethers.Interface([]);
 
   testRegExp = (search, array)=>{
-    var found = 0;
+    let found = 0;
     array.forEach(function(a){
       if(new RegExp(a).test(search))
       found++;
@@ -132,7 +132,7 @@ class Encoder extends Component{
   }
 
   errorExists = () =>{
-    for(var i in this.state.errors){
+    for(let i in this.state.errors){
       if(this.state.errorsp[i])
         return true;
     }
@@ -173,6 +173,7 @@ class Encoder extends Component{
                   value={this.state.types}
                   error={this.state.error.types}
                   onChange={this.typeUpdated}
+                  onKeyUp={this.typeUpdated}
                   helperText="Add the value types, each seperated by a comma"
                   fullWidth
                   margin="normal"
@@ -186,7 +187,8 @@ class Encoder extends Component{
                   value={this.state.values}
                   error={this.state.error.values}
                   onChange={this.valueUpdated}
-                  helperText="Add the values to match the number of types indicated above, each seperated by a comma"
+                  onKeyUp={this.valueUpdated}
+                  helperText="Add the values to match the number of types indicated above, each seperated by a comma (No spaces)"
                   fullWidth
                   margin="normal"
                 />
