@@ -152,7 +152,7 @@ class Index extends Component {
                   {allowedActions[1]}
                   </MenuItem>
                 </Select>
-                <actionChooser {...{state:this.state}} />
+                <ActionChooser {...{state:this.state}} />
               </FormControl>
             </Card>
 
