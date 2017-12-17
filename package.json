@@ -1,0 +1,52 @@
+{
+  "name": "online-ethereum-abi-encoder",
+  "version": "1.0.0",
+  "description": "A quick online tool to abi-encode constructor arguments used in ethereum's solidity",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adibas03/online-ethereum-abi-encoder.git"
+  },
+  "keywords": [
+    "etherscan",
+    "etherscan",
+    "constructor",
+    "abi",
+    "encoder",
+    "online",
+    "ethereum",
+    "decoder",
+    "solidity"
+  ],
+  "author": {
+    "name": "adibas03",
+    "email": "adibas03@gmail.com"
+  },
+  "dependencies": {
+    "ethers": "^2.1.3",
+    "jss": "^8.1.0",
+    "jss-preset-default": "^3.0.0",
+    "material-ui": "next",
+    "prop-types": "latest",
+    "react": "latest",
+    "react-alert": "^2.4.0",
+    "react-dom": "latest",
+    "react-jss": "latest",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "latest",
+    "recompose": "latest",
+    "web3": "^1.0.0-beta.26"
+  },
+  "devDependencies": {},
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/adibas03/online-ethereum-abi-encoder/issues"
+  },
+  "homepage":"/online-ethereum-abi-encoder/"
+}
