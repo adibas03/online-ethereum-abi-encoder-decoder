@@ -45,10 +45,47 @@ class Encoder extends Component{
     return found;
   }
 
+  validateType = (val) =>{
+    if(this.state.values.length == 0 && !this.state.submitted)
+      return;
+    let that = this,clean = true,
+    vals = this.state.types.split(','),
+    array = ValidTypes.map(function(t){
+      return t+'*';
+    })
+    vals.forEach(function(v,id){
+      if(!(id == vals.length-1 && v == '' ))
+        if(that.testRegExp(v,array) < 1){
+          clean = false;
+          let error = {};error['types'] = true;
+          let state = {error:Object.assign(that.state.error,error)};
+          return that.setState(state);
+        }
+    })
+    if(clean){
+      let error = {};error['types'] = false;
+      let state = {error:Object.assign(this.state.error,error)};
+      return this.setState(state);
+    }
+  }
+
+  validateValue = () =>{
+    if(this.state.values.length == 0 && !this.state.submitted)
+      return;
+    let vals = this.state.values.split(','),error = {};
+    if(vals.length !== this.state.types.split(',').length )
+      error['values'] = true;
+    else
+      error['values'] = false;
+
+    let state = {error:Object.assign(this.state.error,error)};
+    return this.setState(state);
+  }
+
   typesSet = () =>{
     let types = this.state.types;
-    types= types.split(',');
-    for (var t=types.length;t>0;t--){
+    types= types.replace(/ /g,",").split(',');
+    for (let t=types.length;t>0;t--){
       if(!types[t])
         types.splice(t,1);
     }
@@ -58,52 +95,31 @@ class Encoder extends Component{
   typeUpdated = event => {
     const val = event.target.value;
     this.handleChange('types')(event);
-    var array = ValidTypes.map(function(t){
-      return t+'*';
-    })
-    var that = this,clean = true;
-    var vals = val.split(',');
-    vals.forEach(function(v,id){
-      if(!(id == vals.length-1 && v == '' ))
-        if(that.testRegExp(v,array) < 1){
-          clean = false;
-          var error = {};error['types'] = true;
-          var state = {error:Object.assign(that.state.error,error)};
-          return that.setState(state);
-        }
-    })
-    if(clean){
-      var error = {};error['types'] = false;
-      var state = {error:Object.assign(that.state.error,error)};
-      return that.setState(state);
-    }
+    this.validateType();
+    return this.validateValue();
   }
 
   valueUpdated = event => {
+    this.validateType();
     this.typesSet()
     const val = event.target.value;
     this.handleChange('values')(event);
-
-    var vals = val.split(','),error = {};
-    if(vals.length !== this.state.types.split(',').length )
-      error['values'] = true;
-    else
-      error['values'] = false;
-
-    var state = {error:Object.assign(this.state.error,error)};
-    return this.setState(state);
+    return this.validateValue();
   }
 
   encodeData = ()=>{
     if(!this.formFilled() || this.errorExists() )
       return;
       this.setState({ submitted: true });
+      this.typesSet();
+      this.validateType();
+      this.validateValue();
     try{
-      var types = this.state.types.split(',');
-      var values = this.state.values.split(',');
+      let types = this.state.types.split(',');
+      let values = this.state.values.split(',');
       if(types.length !== values.length)
         return console.error('Types/values mismatch');
-      var encoded = ethers.Interface.encodeParams(types, values)
+      let encoded = ethers.Interface.encodeParams(types, values)
       this.setState({ encoded: encoded.substring(2) });
     }
     catch(e){
