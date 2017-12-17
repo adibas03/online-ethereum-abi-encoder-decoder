@@ -202,19 +202,21 @@ class Encoder extends Component{
         </Card>
         {this.formFilled() && !this.errorExists() && this.state.submitted &&
             <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
-              <TextField
-                id="full-width"
-                multiline
-                label="Encoded"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={this.state.encoded}
-                disabled
-                helperText="Abi encoded arguments"
-                fullWidth
-                margin="normal"
-              />
+              <FormControl className = {classes.formControl+' '+classes.actionFormControl} >
+                <TextField
+                  id="full-width"
+                  multiline
+                  label="Encoded"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={this.state.encoded}
+                  disabled
+                  helperText="Abi encoded arguments"
+                  fullWidth
+                  margin="normal"
+                />
+            </FormControl>
         </Card>}
       </div>
     )
