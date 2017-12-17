@@ -124,7 +124,6 @@ class Index extends Component {
   };
 
   handleChange = name => event => {
-    console.log(name,event)
     this.setState({ [name]: event.target.value });
   };
 
