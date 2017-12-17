@@ -101,6 +101,8 @@ class Encoder extends Component{
     try{
       var types = this.state.types.split(',');
       var values = this.state.values.split(',');
+      if(types.length !== values.length)
+        return console.error('Types/values mismatch');
       var encoded = ethers.Interface.encodeParams(types, values)
       this.setState({ encoded: encoded.substring(2) });
     }
