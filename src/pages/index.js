@@ -70,22 +70,6 @@ const allowedActions = [
   'decode'
 ]
 
-const BuildMenu = (list)=>{
-  var menu = list.menus.map(function(item,index) {
-    return (
-      <MenuItem value={item} key={item}>
-      {item}
-      </MenuItem>
-    );
-  });
-  menu.unshift(
-    <MenuItem value='' key=''>
-      <em>None</em>
-    </MenuItem>
-  );
-return menu;
-}
-
 const ActionChooser = (data) =>{
   var found =  withRouter(({history})=>{
     var action = data.state.action == ''?'/':'/'+data.state.action;
