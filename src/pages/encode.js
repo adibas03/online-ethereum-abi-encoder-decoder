@@ -39,20 +39,23 @@ class Encoder extends Component{
   testRegExp = (search, array)=>{
     let found = 0;
     array.forEach(function(a){
-      if(new RegExp(a).test(search))
+      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index == 0)
       found++;
     })
     return found;
   }
 
-  validateType = (val) =>{
-    if(this.state.values.length == 0 && !this.state.submitted)
+  validateType = (self) =>{
+    if(!self && this.state.values.length == 0 && !this.state.submitted)
       return;
     let that = this,clean = true,
     vals = this.state.types.split(','),
+    suffixed = ['uint','int','bytes','fixed','ufixed'],
     array = ValidTypes.map(function(t){
-      return t+'*';
+      t = suffixed.indexOf(t) > -1? t+'.*':t;
+      return t;
     })
+
     vals.forEach(function(v,id){
       if(!(id == vals.length-1 && v == '' ))
         if(that.testRegExp(v,array) < 1){
@@ -69,8 +72,8 @@ class Encoder extends Component{
     }
   }
 
-  validateValue = () =>{
-    if(this.state.values.length == 0 && !this.state.submitted)
+  validateValue = (self) =>{
+    if(!self && this.state.values.length == 0 && !this.state.submitted)
       return;
     let vals = this.state.values.split(','),error = {};
     if(vals.length !== this.state.types.split(',').length )
@@ -95,28 +98,32 @@ class Encoder extends Component{
   typeUpdated = event => {
     const val = event.target.value;
     this.handleChange('types')(event);
-    this.validateType();
+    this.validateType(true);
     return this.validateValue();
   }
 
   valueUpdated = event => {
-    this.validateType();
     this.typesSet()
+    this.validateType();
     const val = event.target.value;
     this.handleChange('values')(event);
-    return this.validateValue();
+    return this.validateValue(true);
   }
 
   encodeData = ()=>{
+    this.setState({ submitted: true });
+    this.typesSet();
+    this.validateType();
+    this.validateValue();
+
     if(!this.formFilled() || this.errorExists() )
       return;
-      this.setState({ submitted: true });
-      this.typesSet();
-      this.validateType();
-      this.validateValue();
     try{
       let types = this.state.types.split(',');
       let values = this.state.values.split(',');
+
+      console.log(types,values);
+      
       if(types.length !== values.length)
         return console.error('Types/values mismatch');
       let encoded = ethers.Interface.encodeParams(types, values)
