@@ -87,9 +87,9 @@ class Encoder extends Component{
 
   typesSet = () =>{
     let types = this.state.types;
-    types= types.replace(/ /g,",").split(',');
+    types= types.replace(/ /g,"").split(',');
     for (let t=types.length;t>0;t--){
-      if(!types[t])
+      if(!types[t] )
         types.splice(t,1);
     }
     return this.setState({types:types.join(',')});
@@ -123,7 +123,7 @@ class Encoder extends Component{
       let values = this.state.values.split(',');
 
       console.log(types,values);
-      
+
       if(types.length !== values.length)
         return console.error('Types/values mismatch');
       let encoded = ethers.Interface.encodeParams(types, values)
