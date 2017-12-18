@@ -22,13 +22,13 @@ class Decoder extends Component{
     super(props);
 
     //Hanle binds
-    //this.handleChange = this.handleChange.bind(this);
-    //this.typeUpdated = this.typeUpdated.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.typeUpdated = this.typeUpdated.bind(this);
 
     this.state = {
       types : '',
       values: '',
-      decoded: '',
+      encoded: '',
       error:{},
       submitted:false
       };
@@ -37,19 +37,59 @@ class Decoder extends Component{
   interface = new ethers.Interface([]);
 
   testRegExp = (search, array)=>{
-    var found = 0;
+    let found = 0;
     array.forEach(function(a){
-      if(new RegExp(a).test(search))
+      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index == 0)
       found++;
     })
     return found;
   }
 
+  validateType = (self) =>{
+    if(!self && this.state.values.length == 0 && !this.state.submitted)
+      return;
+    let that = this,clean = true,
+    vals = this.state.types.split(','),
+    suffixed = ['uint','int','bytes','fixed','ufixed'],
+    array = ValidTypes.map(function(t){
+      t = suffixed.indexOf(t) > -1? t+'.*':t;
+      return t;
+    })
+
+    vals.forEach(function(v,id){
+      if(!(id == vals.length-1 && v == '' ))
+        if(that.testRegExp(v,array) < 1){
+          clean = false;
+          let error = {};error['types'] = true;
+          let state = {error:Object.assign(that.state.error,error)};
+          return that.setState(state);
+        }
+    })
+    if(clean){
+      let error = {};error['types'] = false;
+      let state = {error:Object.assign(this.state.error,error)};
+      return this.setState(state);
+    }
+  }
+
+  validateValue = (self) =>{
+    if(!self && this.state.values.length == 0 && !this.state.submitted)
+      return;
+    let vals = this.state.values.split(','),error = {};
+    if(vals.length !== this.state.types.split(',').length )
+      error['values'] = true;
+    else
+      error['values'] = false;
+
+    let state = {error:Object.assign(this.state.error,error)};
+    return this.setState(state);
+  }
+
   typesSet = () =>{
     let types = this.state.types;
-    types= types.split(',');
-    for (var t=types.length;t>0;t--){
-      if(!types[t])
+    types= types.replace(/ /g,"").split(',');
+    for (let t=types.length;t>0;t--){
+      if(!types[t] )
         types.splice(t,1);
     }
     return this.setState({types:types.join(',')});
@@ -58,53 +98,36 @@ class Decoder extends Component{
   typeUpdated = event => {
     const val = event.target.value;
     this.handleChange('types')(event);
-    var array = ValidTypes.map(function(t){
-      return t+'*';
-    })
-    var that = this,clean = true;
-    var vals = val.split(',');
-    vals.forEach(function(v,id){
-      if(!(id == vals.length-1 && v == '' ))
-        if(that.testRegExp(v,array) < 1){
-          clean = false;
-          var error = {};error['types'] = true;
-          var state = {error:Object.assign(that.state.error,error)};
-          return that.setState(state);
-        }
-    })
-    if(clean){
-      var error = {};error['types'] = false;
-      var state = {error:Object.assign(that.state.error,error)};
-      return that.setState(state);
-    }
+    this.validateType(true);
+    return this.validateValue();
   }
 
   valueUpdated = event => {
     this.typesSet()
+    this.validateType();
     const val = event.target.value;
     this.handleChange('values')(event);
-
-    var vals = val.split(','),error = {};
-    if(vals.length !== this.state.types.split(',').length )
-      error['values'] = true;
-    else
-      error['values'] = false;
-
-    var state = {error:Object.assign(this.state.error,error)};
-    return this.setState(state);
+    return this.validateValue(true);
   }
 
   encodeData = ()=>{
+    this.setState({ submitted: true });
+    this.typesSet();
+    this.validateType();
+    this.validateValue();
+
     if(!this.formFilled() || this.errorExists() )
       return;
-      this.setState({ submitted: true });
     try{
-      var types = this.state.types.split(',');
-      var values = this.state.values.split(',');
+      let types = this.state.types.split(',');
+      let values = this.state.values.split(',');
+
+      console.log(types,values);
+
       if(types.length !== values.length)
         return console.error('Types/values mismatch');
-      var decoded = ethers.Interface.encodeParams(types, values)
-      this.setState({ decoded: decoded.substring(2) });
+      let encoded = ethers.Interface.encodeParams(types, values)
+      this.setState({ encoded: encoded.substring(2) });
     }
     catch(e){
       console.error(e);
@@ -116,7 +139,7 @@ class Decoder extends Component{
   }
 
   errorExists = () =>{
-    for(var i in this.state.errors){
+    for(let i in this.state.errors){
       if(this.state.errorsp[i])
         return true;
     }
