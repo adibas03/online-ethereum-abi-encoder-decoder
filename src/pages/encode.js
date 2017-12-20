@@ -139,8 +139,8 @@ class Encoder extends Component{
   }
 
   errorExists = () =>{
-    for(let i in this.state.errors){
-      if(this.state.errorsp[i])
+    for(let i in this.state.error){
+      if(this.state.error[i])
         return true;
     }
     return false;
