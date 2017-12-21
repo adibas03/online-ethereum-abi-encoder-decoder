@@ -24,6 +24,7 @@ class Encoder extends Component{
     //Hanle binds
     this.handleChange = this.handleChange.bind(this);
     this.typeUpdated = this.typeUpdated.bind(this);
+    this.encodeData = this.encodeData.bind(this);
 
     this.state = {
       types : '',
@@ -87,12 +88,16 @@ class Encoder extends Component{
 
   typesSet = () =>{
     let types = this.state.types;
+    if(!types || types.length<1)
+      return;
+
     types= types.replace(/ /g,"").split(',');
     for (let t=types.length;t>0;t--){
       if(!types[t] )
         types.splice(t,1);
     }
-    return this.setState({types:types.join(',')});
+    this.setState({types:types.join(',')});
+    return true;
   }
 
   typeUpdated = event => {
@@ -110,9 +115,9 @@ class Encoder extends Component{
     return this.validateValue(true);
   }
 
-  encodeData = ()=>{
+  async encodeData (){
     this.setState({ submitted: true });
-    this.typesSet();
+    await this.typesSet();
     this.validateType();
     this.validateValue();
 
