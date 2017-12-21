@@ -214,7 +214,7 @@ class Decoder extends Component{
                   }}
                   value={this.state.decoded}
                   disabled
-                  helperText="Abi encoded arguments"
+                  helperText="Decodecoded Abi arguments"
                   fullWidth
                   margin="normal"
                 />
