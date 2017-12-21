@@ -57,9 +57,11 @@ const introMsg = (
           The tool was designed to make easy encoding and decoding of
           Ethereum solidity abi data.<br/>
           Github:
-          <a href="https://github.com/adibas03/online-ethereum-abi-encoder" >
-          https://github.com/adibas03/online-ethereum-abi-encoder
-          </a>
+          <a href="https://github.com/adibas03/online-ethereum-abi-encoder-decoder" >
+          https://github.com/adibas03/online-ethereum-abi-encoder-decoder
+        </a><br/><br/>
+      Buy me a Coffe or a Beer  <br/>
+          Ethereum: <b>0x965D1C9987BD2c34e151E63d60AFf8E9dB6b1561</b>
     </Typography>
   </div>
 
