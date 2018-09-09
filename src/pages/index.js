@@ -60,7 +60,7 @@ const introMsg = (
 const allowedActions = [
   "encode",
   "decode"
-]
+];
 
 const ActionChooser = (data) =>{
   var found =  withRouter(({history})=>{
