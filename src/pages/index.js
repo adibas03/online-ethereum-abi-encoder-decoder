@@ -1,34 +1,26 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import React, { Component } from 'react';
-import { Route, Switch, Redirect, Link, withRouter } from 'react-router-dom'
-
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 
-import { title,description,author } from '../config/app'
+import { title } from '../config/app'
 
 import Encoder from './encode'
 import Decoder from './decode'
 
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Card from '@material-ui/core/Card';
 
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { MenuItem } from 'material-ui/Menu';
-import Input, { InputLabel } from 'material-ui/Input';
-import Select from 'material-ui/Select';
-import Button from 'material-ui/Button';
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-} from 'material-ui/Dialog';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 
 import withRoot from '../components/withRoot';
 
@@ -74,8 +66,8 @@ const allowedActions = [
 
 const ActionChooser = (data) =>{
   var found =  withRouter(({history})=>{
-    var action = data.state.action == ''?'/':'/'+data.state.action;
-    if(typeof action === 'undefined' || history.location.pathname == action)
+    var action = data.state.action === ''?'/':'/'+data.state.action;
+    if(typeof action === 'undefined' || history.location.pathname === action)
       return '';
     else{
       return <Redirect to={ {pathname:action}} />

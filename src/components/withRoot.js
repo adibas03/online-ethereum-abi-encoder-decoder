@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { HashRouter } from 'react-router-dom'
 
 import JssProvider from 'react-jss/lib/JssProvider';
-import { withStyles, MuiThemeProvider } from 'material-ui/styles';
+import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import wrapDisplayName from 'recompose/wrapDisplayName';
 import createContext from '../styles/createContext';
 
