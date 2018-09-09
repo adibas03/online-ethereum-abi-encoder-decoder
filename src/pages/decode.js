@@ -36,6 +36,8 @@ class Decoder extends Component{
       error:{},
       submitted:false
       };
+
+    this.abiCoder = new ethers.utils.AbiCoder();
   }
 
   testRegExp (search, array) {
@@ -115,7 +117,7 @@ class Decoder extends Component{
 
       Log(types,value);
 
-      let decoded = ethers.Interface.decodeParams(types, value);
+      let decoded = this.abiCoder.decode(types, value);
       decoded = decoded.map(function(d){
           return d.toString();
       });
