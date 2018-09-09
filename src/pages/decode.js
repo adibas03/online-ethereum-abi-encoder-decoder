@@ -8,6 +8,8 @@ import TextField from "@material-ui/core/TextField";
 
 import ethers from "ethers";
 import ValidTypes from "../config/types";
+import { suffixed } from "../config/types";
+const Log = window.console.log;
 
 class Decoder extends Component{
   constructor(props) {
@@ -15,8 +17,17 @@ class Decoder extends Component{
 
     //Hanle binds
     this.handleChange = this.handleChange.bind(this);
-    this.typeUpdated = this.typeUpdated.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
     this.decodeData = this.decodeData.bind(this);
+
+    this.testRegExp = this.testRegExp.bind(this);
+    this.validateType = this.validateType.bind(this);
+    this.typesSet = this.typesSet.bind(this);
+    this.typeUpdated = this.typeUpdated.bind(this);
+    this.valueUpdated = this.valueUpdated.bind(this);
+    this.formFilled = this.formFilled.bind(this);
+    this.errorExists = this.errorExists.bind(this);
 
     this.state = {
       types : "",
@@ -27,25 +38,24 @@ class Decoder extends Component{
       };
   }
 
-  testRegExp = (search, array)=>{
+  testRegExp (search, array) {
     let found = 0;
     array.forEach(function(a){
       if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index === 0)
       found++;
-    })
+    });
     return found;
   }
 
-  validateType = (self) =>{
+  validateType (self) {
     if(!self && this.state.value.length === 0 && !this.state.submitted)
       return;
     let that = this,clean = true,
     vals = this.state.types.split(","),
-    suffixed = ["uint","int","bytes","fixed","ufixed"],
     array = ValidTypes.map(function(t){
       t = suffixed.indexOf(t) > -1? t+".*":t;
       return t;
-    })
+    });
 
     vals.forEach(function(v,id){
       if(!(id === vals.length-1 && v === "" ))
@@ -55,7 +65,8 @@ class Decoder extends Component{
           let state = {error:Object.assign(that.state.error,error)};
           return that.setState(state);
         }
-    })
+    });
+
     if(clean){
       let error = {};error["types"] = false;
       let state = {error:Object.assign(this.state.error,error)};
@@ -63,7 +74,7 @@ class Decoder extends Component{
     }
   }
 
-  typesSet = () =>{
+  typesSet () {
     let types = this.state.types;
     if(!types || types.length<1)
       return;
@@ -77,15 +88,15 @@ class Decoder extends Component{
     return true;
   }
 
-  typeUpdated = event => {
-    this.handleChange("types")(event);
+  typeUpdated (event) {
+    this.handleChange("types", event);
     return this.validateType(true);
   }
 
-  valueUpdated = event => {
-    this.typesSet()
+  valueUpdated (event) {
+    this.typesSet();
     this.validateType();
-    return this.handleChange("value")(event);
+    return this.handleChange("value", event);
   }
 
   async decodeData (){
@@ -102,25 +113,25 @@ class Decoder extends Component{
       if(value.indexOf("0x") !== 0)
         value = "0x"+value;
 
-      console.log(types,value);
+      Log(types,value);
 
       let decoded = ethers.Interface.decodeParams(types, value);
       decoded = decoded.map(function(d){
           return d.toString();
-      })
-      console.log(decoded)
+      });
+      Log(decoded);
       this.setState({ decoded: decoded.join(",") });
     }
     catch(e){
-      console.error(e);
+      throw new Error(e);
     }
   }
 
-  formFilled = () =>{
+  formFilled () {
     return this.state.types && this.state.value;
   }
 
-  errorExists = () =>{
+  errorExists () {
     for(let i in this.state.error){
       if(this.state.error[i])
         return true;
@@ -128,24 +139,24 @@ class Decoder extends Component{
     return false;
   }
 
-  handleRequestClose = () => {
+  handleRequestClose () {
     this.setState({
       open: false,
     });
-  };
+  }
 
-  handleClick = () => {
+  handleClick () {
     this.setState({
       open: true,
     });
-  };
+  }
 
-  handleChange = name => event => {
+  handleChange (name, event) {
     this.setState({ [name]: event.target.value,submitted: false });
-  };
+  }
 
   render(){
-    const { classes } = this.props
+    const { classes } = this.props;
 
     return(
       <div>
@@ -209,7 +220,7 @@ class Decoder extends Component{
             </FormControl>
         </Card>}
       </div>
-    )
+    );
   }
 }
 

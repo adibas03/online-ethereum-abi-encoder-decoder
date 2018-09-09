@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Route, Switch, Redirect, withRouter } from "react-router-dom"
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { title } from "../config/app"
+import { title } from "../config/app";
 
-import Encoder from "./encode"
-import Decoder from "./decode"
+import Encoder from "./encode";
+import Decoder from "./decode";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -68,43 +68,36 @@ const ActionChooser = (data) =>{
     if(typeof action === "undefined" || history.location.pathname === action)
       return "";
     else{
-      return <Redirect to={ {pathname:action}} />
+      return <Redirect to={{ pathname:action }} />;
     }
-  })(<div></div>)
+  })(<div></div>);
   return found;
-}
+};
 
 class Index extends Component {
   constructor(props) {
     super(props);
 
     //Hanle binds
+    this.handleActionChange = this.handleActionChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
     this.state = {
         action:"",
         open: false,
       };
-    }
+  }
 
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    });
-  };
+  handleActionChange (event) {
+    this.handleChange("action", event);
+  }
 
-  handleClick = () => {
-    this.setState({
-      open: true,
-    });
-  };
-
-  handleChange = name => event => {
+  handleChange (name, event) {
     this.setState({ [name]: event.target.value });
-  };
+  }
 
   render() {
-    const { classes } = this.props
+    const { classes } = this.props;
 
     return (
       <div>
@@ -116,7 +109,7 @@ class Index extends Component {
                 <InputLabel htmlFor="action-simple">Action</InputLabel>
                 <Select
                 value={this.state.action}
-                onChange={this.handleChange("action")}>
+                onChange={this.handleActionChange}>
                   <MenuItem value="" key="">
                     <em>-- choose --</em>
                   </MenuItem>

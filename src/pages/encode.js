@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import Card from '@material-ui/core/Card';
-import FormControl from '@material-ui/core/FormControl';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Card from "@material-ui/core/Card";
+import FormControl from "@material-ui/core/FormControl";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 
-import ethers from 'ethers';
-import ValidTypes from '../config/types';
+import ethers from "ethers";
+import ValidTypes from "../config/types";
+import { suffixed } from "../config/types";
+const Log = window.console.log;
 
 class Encoder extends Component{
   constructor(props) {
@@ -15,13 +17,22 @@ class Encoder extends Component{
 
     //Hanle binds
     this.handleChange = this.handleChange.bind(this);
-    this.typeUpdated = this.typeUpdated.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
     this.encodeData = this.encodeData.bind(this);
 
+    this.testRegExp = this.testRegExp.bind(this);
+    this.validateType = this.validateType.bind(this);
+    this.typesSet = this.typesSet.bind(this);
+    this.typeUpdated = this.typeUpdated.bind(this);
+    this.valueUpdated = this.valueUpdated.bind(this);
+    this.formFilled = this.formFilled.bind(this);
+    this.errorExists = this.errorExists.bind(this);
+
     this.state = {
-      types : '',
-      values: '',
-      encoded: '',
+      types : "",
+      values: "",
+      encoded: "",
       error:{},
       submitted:false
       };
@@ -30,79 +41,78 @@ class Encoder extends Component{
   }
 
 
-  testRegExp = (search, array)=>{
+  testRegExp (search, array) {
     let found = 0;
     array.forEach(function(a){
       if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index === 0)
       found++;
-    })
+    });
     return found;
   }
 
-  validateType = (self) =>{
+  validateType (self) {
     if(!self && this.state.values.length === 0 && !this.state.submitted)
       return;
     let that = this,clean = true,
-    vals = this.state.types.split(','),
-    suffixed = ['uint','int','bytes','fixed','ufixed'],
+    vals = this.state.types.split(","),
     array = ValidTypes.map(function(t){
-      t = suffixed.indexOf(t) > -1? t+'.*':t;
+      t = suffixed.indexOf(t) > -1? t+".*":t;
       return t;
-    })
+    });
 
     vals.forEach(function(v,id){
-      if(!(id === vals.length-1 && v === '' ))
+      if(!(id === vals.length-1 && v === "" ))
         if(that.testRegExp(v,array) < 1){
           clean = false;
-          let error = {};error['types'] = true;
+          let error = {};error["types"] = true;
           let state = {error:Object.assign(that.state.error,error)};
           return that.setState(state);
         }
-    })
+    });
     if(clean){
-      let error = {};error['types'] = false;
+      let error = {};error["types"] = false;
       let state = {error:Object.assign(this.state.error,error)};
       return this.setState(state);
     }
   }
 
-  validateValue = (self) =>{
+  validateValue (self) {
     if(!self && this.state.values.length === 0 && !this.state.submitted)
       return;
-    let vals = this.state.values.split(','),error = {};
-    if(vals.length !== this.state.types.split(',').length )
-      error['values'] = true;
+    let vals = this.state.values.split(","),error = {};
+    if(vals.length !== this.state.types.split(",").length )
+      error["values"] = true;
     else
-      error['values'] = false;
+      error["values"] = false;
 
     let state = {error:Object.assign(this.state.error,error)};
     return this.setState(state);
   }
 
-  typesSet = () =>{
+  typesSet () {
     let types = this.state.types;
     if(!types || types.length<1)
       return;
 
-    types= types.replace(/ /g,"").split(',');
+    types= types.replace(/ /g,"").split(",");
     for (let t=types.length;t>0;t--){
       if(!types[t] )
         types.splice(t,1);
     }
-    this.setState({types:types.join(',')});
+    this.setState({types:types.join(",")});
     return true;
   }
 
-  typeUpdated = event => {
-    this.handleChange('types')(event);
+  typeUpdated (event)  {
+    this.handleChange("types", event);
     this.validateType(true);
     return this.validateValue();
   }
 
-  valueUpdated = event => {
-    this.typesSet()
+  valueUpdated (event)  {
+    this.typesSet();
     this.validateType();
-    this.handleChange('values')(event);
+    this.handleChange("values", event);
     return this.validateValue(true);
   }
 
@@ -115,26 +125,26 @@ class Encoder extends Component{
     if(!this.formFilled() || this.errorExists() )
       return;
     try{
-      let types = this.state.types.split(',');
-      let values = this.state.values.split(',');
+      let types = this.state.types.split(",");
+      let values = this.state.values.split(",");
 
-      console.log(types,values);
+      Log(types,values);
 
       if(types.length !== values.length)
-        return console.error('Types/values mismatch');
-      let encoded = ethers.Interface.encodeParams(types, values)
+        throw new Error("Types/values mismatch");
+      let encoded = ethers.Interface.encodeParams(types, values);
       this.setState({ encoded: encoded.substring(2) });
     }
     catch(e){
-      console.error(e);
+      throw new Error(e);
     }
   }
 
-  formFilled = () =>{
+  formFilled () {
     return this.state.types && this.state.values;
   }
 
-  errorExists = () =>{
+  errorExists () {
     for(let i in this.state.error){
       if(this.state.error[i])
         return true;
@@ -142,31 +152,31 @@ class Encoder extends Component{
     return false;
   }
 
-  handleRequestClose = () => {
+  handleRequestClose ()  {
     this.setState({
       open: false,
     });
-  };
+  }
 
-  handleClick = () => {
+  handleClick ()  {
     this.setState({
       open: true,
     });
-  };
+  }
 
-  handleChange = name => event => {
+  handleChange (name,  event)  {
     this.setState({ [name]: event.target.value,submitted: false });
-  };
+  }
 
   render(){
-    const { classes } = this.props
+    const { classes } = this.props;
 
     return(
       <div>
-        <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
+        <Card raised={true} className={classes.topMargin+" "+classes.leftPadding+" "+classes.width95} >
 
-            <div className={classes.topPadding+' '+classes.bottomMargin} >
-              <FormControl className = {classes.formControl+' '+classes.actionFormControl} >
+            <div className={classes.topPadding+" "+classes.bottomMargin} >
+              <FormControl className = {classes.formControl+" "+classes.actionFormControl} >
                 <TextField
                   id="full-width"
                   label="Argument Types"
@@ -196,7 +206,7 @@ class Encoder extends Component{
                   margin="normal"
                 />
               <div className={classes.topPadding}>
-                <Button variant="contained" color="primary" className={classes.button+' '+classes.right} onClick={this.encodeData}>
+                <Button variant="contained" color="primary" className={classes.button+" "+classes.right} onClick={this.encodeData}>
                   Encode
                 </Button>
               </div>
@@ -204,8 +214,8 @@ class Encoder extends Component{
             </div>
         </Card>
         {this.formFilled() && !this.errorExists() && this.state.submitted &&
-            <Card raised={true} className={classes.topMargin+' '+classes.leftPadding+' '+classes.width95} >
-              <FormControl className = {classes.formControl+' '+classes.actionFormControl} >
+            <Card raised={true} className={classes.topMargin+" "+classes.leftPadding+" "+classes.width95} >
+              <FormControl className = {classes.formControl+" "+classes.actionFormControl} >
                 <TextField
                   id="full-width"
                   multiline
@@ -222,7 +232,7 @@ class Encoder extends Component{
             </FormControl>
         </Card>}
       </div>
-    )
+    );
   }
 }
 

@@ -1,3 +1,5 @@
+const suffixed = ["uint","int","bytes","fixed","ufixed"];
+
 export default [
   "int",
   "uint",
@@ -8,3 +10,5 @@ export default [
   "string",
   "bool"
 ];
+
+export { suffixed };
