@@ -1,6 +1,6 @@
 {
   "name": "online-ethereum-abi-encoder",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.1",
   "description": "A quick online tool to abi-encode constructor arguments used in ethereum's solidity",
   "main": "index.js",
   "scripts": {
