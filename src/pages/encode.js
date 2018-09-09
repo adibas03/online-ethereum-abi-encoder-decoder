@@ -37,7 +37,7 @@ class Encoder extends Component{
       submitted:false
       };
 
-    this.interface = new ethers.Interface([]);
+    this.abiCoder = new ethers.utils.AbiCoder();
   }
 
 
@@ -132,7 +132,7 @@ class Encoder extends Component{
 
       if(types.length !== values.length)
         throw new Error("Types/values mismatch");
-      let encoded = ethers.Interface.encodeParams(types, values);
+      let encoded = this.abiCoder.encode(types, values);
       this.setState({ encoded: encoded.substring(2) });
     }
     catch(e){

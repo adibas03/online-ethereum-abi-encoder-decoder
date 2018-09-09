@@ -21,6 +21,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 import withRoot from "../components/withRoot";
+import allowedActions from "../config/actions";
 
 import styles from "../styles/pages";
 
@@ -56,11 +57,6 @@ const introMsg = (
   </div>
 
 );
-
-const allowedActions = [
-  "encode",
-  "decode"
-];
 
 const ActionChooser = (data) =>{
   var found =  withRouter(({history})=>{
