@@ -1,7 +1,8 @@
 {
-    "plugins": [
-        "react"
-    ],
+    "env": {
+        "browser": true,
+        "node": true
+    },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
@@ -14,6 +15,9 @@
             "modules": true
         }
     },
+    "plugins": [
+        "react"
+    ],
     "rules": {
         "semi": ["error", "always"],
         "quotes": ["error", "double"]

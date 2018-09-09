@@ -1,20 +1,20 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import React, { Component } from 'react';
-import { HashRouter } from 'react-router-dom'
+import React, { Component } from "react";
+import { HashRouter } from "react-router-dom";
 
-import JssProvider from 'react-jss/lib/JssProvider';
-import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import wrapDisplayName from 'recompose/wrapDisplayName';
-import createContext from '../styles/createContext';
+import JssProvider from "react-jss/lib/JssProvider";
+import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
+import wrapDisplayName from "recompose/wrapDisplayName";
+import createContext from "../styles/createContext";
 
 // Apply some reset
 const styles = theme => ({
-  '@global': {
+  "@global": {
     html: {
       background: theme.palette.background.default,
-      WebkitFontSmoothing: 'antialiased', // Antialiasing.
-      MozOsxFontSmoothing: 'grayscale', // Antialiasing.
+      WebkitFontSmoothing: "antialiased", // Antialiasing.
+      MozOsxFontSmoothing: "grayscale", // Antialiasing.
     },
     body: {
       margin: 0,
@@ -32,7 +32,7 @@ function withRoot(BaseComponent) {
   class WithRoot extends Component {
     componentDidMount() {
       // Remove the server-side injected CSS.
-      const jssStyles = document.querySelector('#jss-server-side');
+      const jssStyles = document.querySelector("#jss-server-side");
       if (jssStyles && jssStyles.parentNode) {
         jssStyles.parentNode.removeChild(jssStyles);
       }
@@ -53,8 +53,8 @@ function withRoot(BaseComponent) {
     }
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    WithRoot.displayName = wrapDisplayName(BaseComponent, 'withRoot');
+  if (process.env.NODE_ENV !== "production") {
+    WithRoot.displayName = wrapDisplayName(BaseComponent, "withRoot");
   }
 
   return WithRoot;

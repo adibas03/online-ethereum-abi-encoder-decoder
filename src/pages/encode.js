@@ -25,9 +25,10 @@ class Encoder extends Component{
       error:{},
       submitted:false
       };
+
+    this.interface = new ethers.Interface([]);
   }
 
-  interface = new ethers.Interface([]);
 
   testRegExp = (search, array)=>{
     let found = 0;

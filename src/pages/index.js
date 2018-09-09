@@ -1,30 +1,28 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+import React, { Component } from "react";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom"
+import PropTypes from "prop-types";
 
-import React, { Component } from 'react';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
-import PropTypes from 'prop-types';
+import { title } from "../config/app"
 
-import { title } from '../config/app'
+import Encoder from "./encode"
+import Decoder from "./decode"
 
-import Encoder from './encode'
-import Decoder from './decode'
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import Card from "@material-ui/core/Card";
 
-import Card from '@material-ui/core/Card';
+import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
 
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
+import withRoot from "../components/withRoot";
 
-import withRoot from '../components/withRoot';
-
-import styles from '../styles/pages';
+import styles from "../styles/pages";
 
 const TopAppBar = () => (
   <AppBar position="static" >
@@ -60,15 +58,15 @@ const introMsg = (
 );
 
 const allowedActions = [
-  'encode',
-  'decode'
+  "encode",
+  "decode"
 ]
 
 const ActionChooser = (data) =>{
   var found =  withRouter(({history})=>{
-    var action = data.state.action === ''?'/':'/'+data.state.action;
-    if(typeof action === 'undefined' || history.location.pathname === action)
-      return '';
+    var action = data.state.action === ""?"/":"/"+data.state.action;
+    if(typeof action === "undefined" || history.location.pathname === action)
+      return "";
     else{
       return <Redirect to={ {pathname:action}} />
     }
@@ -84,7 +82,7 @@ class Index extends Component {
     this.handleChange = this.handleChange.bind(this);
 
     this.state = {
-        action:'',
+        action:"",
         open: false,
       };
     }
@@ -112,14 +110,14 @@ class Index extends Component {
       <div>
         <TopAppBar />
           <div className={classes.root}>
-            <Card raised={true} className={classes.topMargin+' '+classes.bottomMargin+' '+classes.leftPadding+' '+classes.width95} >
+            <Card raised={true} className={classes.topMargin+" "+classes.bottomMargin+" "+classes.leftPadding+" "+classes.width95} >
               <div className={classes.topPadding}>{introMsg}</div>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="action-simple">Action</InputLabel>
                 <Select
                 value={this.state.action}
-                onChange={this.handleChange('action')}>
-                  <MenuItem value='' key=''>
+                onChange={this.handleChange("action")}>
+                  <MenuItem value="" key="">
                     <em>-- choose --</em>
                   </MenuItem>
                   <MenuItem value={allowedActions[0]} >
