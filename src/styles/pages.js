@@ -19,21 +19,21 @@ const styles = {
     paddingRight:15
   },
   right:{
-    float:'right'
+    float:"right"
   },
   left:{
-    float:'left'
+    float:"left"
   },
   width95:{
-    width:'95%',
-    marginLeft:'auto',
-    marginRight:'auto'
+    width:"95%",
+    marginLeft:"auto",
+    marginRight:"auto"
   },
   container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden'
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    overflow: "hidden"
   },
   formControl: {
     margin: 20,
@@ -43,10 +43,10 @@ const styles = {
     marginTop: 20 * 2,
   },
   actionFormControl: {
-    width:'94%',
+    width:"94%",
   },
   button:{
-    margin: '8px',
+    margin: "8px",
   }
 
 };
