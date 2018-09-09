@@ -29,24 +29,25 @@
     "email": "adibas03@gmail.com"
   },
   "dependencies": {
-    "ethers": "^2.1.3",
-    "jss": "^8.1.0",
-    "jss-preset-default": "^3.0.0",
-    "material-ui": "next",
-    "prop-types": "latest",
-    "react": "latest",
-    "react-alert": "^2.4.0",
-    "react-dom": "latest",
-    "react-jss": "latest",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "latest",
-    "recompose": "latest",
-    "web3": "^1.0.0-beta.26"
+    "@material-ui/core": "3.0.3",
+    "ethers": "3.0.27",
+    "web3": "1.0.0-beta.36"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jss": "9.8.7",
+    "jss-preset-default": "4.5.0",
+    "prop-types": "15.6.2",
+    "react": "16.5.0",
+    "react-alert": "4.0.4",
+    "react-dom": "16.5.0",
+    "react-jss": "8.6.1",
+    "react-router-dom": "4.3.1",
+    "react-scripts": "1.1.5",
+    "recompose": "0.30.0"
+  },
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/adibas03/online-ethereum-abi-encoder/issues"
   },
-  "homepage":"./"
+  "homepage": "./"
 }
