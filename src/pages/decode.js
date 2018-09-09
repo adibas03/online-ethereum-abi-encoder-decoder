@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom'
-
 import PropTypes from 'prop-types';
 
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { MenuItem } from 'material-ui/Menu';
-import Input, { InputLabel } from 'material-ui/Input';
-import Select from 'material-ui/Select';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-
-import Typography from 'material-ui/Typography';
+import Card from '@material-ui/core/Card';
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 import ethers from 'ethers';
 import ValidTypes from '../config/types';
@@ -40,14 +32,14 @@ class Decoder extends Component{
   testRegExp = (search, array)=>{
     let found = 0;
     array.forEach(function(a){
-      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index == 0)
+      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index === 0)
       found++;
     })
     return found;
   }
 
   validateType = (self) =>{
-    if(!self && this.state.value.length == 0 && !this.state.submitted)
+    if(!self && this.state.value.length === 0 && !this.state.submitted)
       return;
     let that = this,clean = true,
     vals = this.state.types.split(','),
@@ -58,7 +50,7 @@ class Decoder extends Component{
     })
 
     vals.forEach(function(v,id){
-      if(!(id == vals.length-1 && v == '' ))
+      if(!(id === vals.length-1 && v === '' ))
         if(that.testRegExp(v,array) < 1){
           clean = false;
           let error = {};error['types'] = true;
@@ -88,7 +80,6 @@ class Decoder extends Component{
   }
 
   typeUpdated = event => {
-    const val = event.target.value;
     this.handleChange('types')(event);
     return this.validateType(true);
   }
@@ -96,7 +87,6 @@ class Decoder extends Component{
   valueUpdated = event => {
     this.typesSet()
     this.validateType();
-    const val = event.target.value;
     return this.handleChange('value')(event);
   }
 
@@ -195,7 +185,7 @@ class Decoder extends Component{
                   margin="normal"
                 />
               <div className={classes.topPadding}>
-                <Button raised color="primary" className={classes.button+' '+classes.right} onClick={this.decodeData}>
+                <Button variant="contained" color="primary" className={classes.button+' '+classes.right} onClick={this.decodeData}>
                   Decode
                 </Button>
               </div>

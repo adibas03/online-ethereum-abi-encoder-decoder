@@ -29,8 +29,8 @@
     "email": "adibas03@gmail.com"
   },
   "dependencies": {
+    "@material-ui/core": "3.0.3",
     "ethers": "3.0.27",
-    "material-ui": "^1.0.0-beta.47",
     "web3": "1.0.0-beta.36"
   },
   "devDependencies": {
