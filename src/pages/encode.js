@@ -15,19 +15,11 @@ class Encoder extends Component{
   constructor(props) {
     super(props);
 
-    //Hanle binds
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
+    //Handle binds
     this.encodeData = this.encodeData.bind(this);
 
-    this.testRegExp = this.testRegExp.bind(this);
-    this.validateType = this.validateType.bind(this);
-    this.typesSet = this.typesSet.bind(this);
     this.typeUpdated = this.typeUpdated.bind(this);
     this.valueUpdated = this.valueUpdated.bind(this);
-    this.formFilled = this.formFilled.bind(this);
-    this.errorExists = this.errorExists.bind(this);
 
     this.state = {
       types : "",
@@ -40,7 +32,6 @@ class Encoder extends Component{
     this.abiCoder = new ethers.utils.AbiCoder();
   }
 
-
   testRegExp (search, array) {
     let found = 0;
     array.forEach(function(a){
@@ -48,6 +39,25 @@ class Encoder extends Component{
       found++;
     });
     return found;
+  }
+
+  parseForEncode (values) {
+    const that = this;
+    const matched = this.matchRegExpValues(values);
+
+    
+    return values.map(function(val) {
+      // if (val.index)
+      // if (that.matchRegExpValues(val)) {
+      //   if (val.ndexOf('[') > -1) {
+
+      //   }
+      //   return that.parseForEncode(val);
+      // } else {
+
+      // }
+    })
+    this.matchRegExpValues(this.state.values)
   }
 
   validateType (self) {
@@ -61,13 +71,16 @@ class Encoder extends Component{
     });
 
     vals.forEach(function(v,id){
-      if(!(id === vals.length-1 && v === "" ))
+      if(id === vals.length-1 && v === "") {
+        return;
+      } else {
         if(that.testRegExp(v,array) < 1){
           clean = false;
           let error = {};error["types"] = true;
           let state = {error:Object.assign(that.state.error,error)};
           return that.setState(state);
         }
+      }
     });
     if(clean){
       let error = {};error["types"] = false;
@@ -79,14 +92,21 @@ class Encoder extends Component{
   validateValue (self) {
     if(!self && this.state.values.length === 0 && !this.state.submitted)
       return;
-    let vals = this.state.values.split(","),error = {};
-    if(vals.length !== this.state.types.split(",").length )
+
+    let error = {};
+    const matchedValues = this.matchRegExpValues(this.state.values) || [];
+    if(this.state.types.split(",").length !== matchedValues.length)
       error["values"] = true;
     else
       error["values"] = false;
 
     let state = {error:Object.assign(this.state.error,error)};
     return this.setState(state);
+  }
+
+  matchRegExpValues (values) {
+    const regEx = new RegExp(/(\[[0-9a-zA-Z,]+\]|[0-9a-zA-Z]+)/gi);
+    return values.match(regEx)
   }
 
   typesSet () {
@@ -127,6 +147,7 @@ class Encoder extends Component{
     try{
       let types = this.state.types.split(",");
       let values = this.state.values.split(",");
+      console.log(this.parseForEncode(this.state.values))
 
       Log(types,values);
 
@@ -150,18 +171,6 @@ class Encoder extends Component{
         return true;
     }
     return false;
-  }
-
-  handleRequestClose ()  {
-    this.setState({
-      open: false,
-    });
-  }
-
-  handleClick ()  {
-    this.setState({
-      open: true,
-    });
   }
 
   handleChange (name,  event)  {
@@ -201,7 +210,7 @@ class Encoder extends Component{
                   error={this.state.error.values}
                   onChange={this.valueUpdated}
                   onKeyUp={this.valueUpdated}
-                  helperText="Add the values to match the number of types indicated above, each seperated by a comma (No spaces)"
+                  helperText="Add the values to match the number of types indicated above, each seperated by a comma (No spaces), use [ ] to wrap array"
                   fullWidth
                   margin="normal"
                 />

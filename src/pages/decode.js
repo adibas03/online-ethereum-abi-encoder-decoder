@@ -15,19 +15,11 @@ class Decoder extends Component{
   constructor(props) {
     super(props);
 
-    //Hanle binds
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
+    //Handle binds
     this.decodeData = this.decodeData.bind(this);
 
-    this.testRegExp = this.testRegExp.bind(this);
-    this.validateType = this.validateType.bind(this);
-    this.typesSet = this.typesSet.bind(this);
     this.typeUpdated = this.typeUpdated.bind(this);
     this.valueUpdated = this.valueUpdated.bind(this);
-    this.formFilled = this.formFilled.bind(this);
-    this.errorExists = this.errorExists.bind(this);
 
     this.state = {
       types : "",
@@ -118,15 +110,24 @@ class Decoder extends Component{
       Log(types,value);
 
       let decoded = this.abiCoder.decode(types, value);
-      decoded = decoded.map(function(d){
-          return d.toString();
-      });
+      
+      decoded = this.parseDecoded(decoded);
       Log(decoded);
       this.setState({ decoded: decoded.join(",") });
     }
     catch(e){
       throw new Error(e);
     }
+  }
+
+  parseDecoded (toParse) {
+    const that = this;
+    return toParse.map(function(d){
+      return (typeof d === "object" && d.length !== undefined) ?
+        JSON.stringify(that.parseDecoded(d)).replace(/"/g,"")
+         :
+        d.toString();
+    });
   }
 
   formFilled () {
@@ -139,18 +140,6 @@ class Decoder extends Component{
         return true;
     }
     return false;
-  }
-
-  handleRequestClose () {
-    this.setState({
-      open: false,
-    });
-  }
-
-  handleClick () {
-    this.setState({
-      open: true,
-    });
   }
 
   handleChange (name, event) {
