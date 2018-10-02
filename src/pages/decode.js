@@ -113,6 +113,7 @@ class Decoder extends Component{
       
       decoded = this.parseDecoded(decoded);
       Log(decoded);
+
       this.setState({ decoded: decoded.join(",") });
     }
     catch(e){
@@ -144,6 +145,10 @@ class Decoder extends Component{
 
   handleChange (name, event) {
     this.setState({ [name]: event.target.value,submitted: false });
+  }
+
+  selectTarget (clickEvent) {
+    clickEvent.target.select();
   }
 
   render(){
@@ -203,10 +208,13 @@ class Decoder extends Component{
                     shrink: true,
                   }}
                   value={this.state.decoded}
-                  disabled
                   helperText="Decodecoded Abi arguments"
                   fullWidth
                   margin="normal"
+                  variant="filled"
+                  readOnly={true}
+                  onClick={this.selectTarget}
+                  onFocus={this.selectTarget}
                 />
             </FormControl>
         </Card>}

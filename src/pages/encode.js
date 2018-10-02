@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import FormControl from "@material-ui/core/FormControl";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+
 
 import ethers from "ethers";
 import ValidTypes from "../config/types";
@@ -32,32 +33,19 @@ class Encoder extends Component{
     this.abiCoder = new ethers.utils.AbiCoder();
   }
 
-  testRegExp (search, array) {
-    let found = 0;
-    array.forEach(function(a){
-      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index === 0)
-      found++;
-    });
-    return found;
-  }
-
   parseForEncode (values) {
-    const that = this;
     const matched = this.matchRegExpValues(values);
-
     
-    return values.map(function(val) {
-      // if (val.index)
-      // if (that.matchRegExpValues(val)) {
-      //   if (val.ndexOf('[') > -1) {
-
-      //   }
-      //   return that.parseForEncode(val);
-      // } else {
-
-      // }
+    return matched.map((val) => {
+      if (this.testArrayRegExpValues(val)) {
+        val = this.stripArray(val);
+        debugger;
+      }
+      if (this.testRegExpValues(val)) {
+        val = this.parseForEncode(val);
+      }
+      return val;
     })
-    this.matchRegExpValues(this.state.values)
   }
 
   validateType (self) {
@@ -104,9 +92,33 @@ class Encoder extends Component{
     return this.setState(state);
   }
 
+  stripArray(value) {
+    const regEx = new RegExp(/^\[|\]$/gi);
+    return value.replace(regEx,'');
+  }
+
   matchRegExpValues (values) {
     const regEx = new RegExp(/(\[[0-9a-zA-Z,]+\]|[0-9a-zA-Z]+)/gi);
     return values.match(regEx)
+  }
+
+  testRegExp (search, array) {
+    let found = 0;
+    array.forEach(function(a){
+      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index === 0)
+      found++;
+    });
+    return found;
+  }
+
+  testRegExpValues (values) {
+    const regEx = new RegExp(/(,+)/gi);
+    return regEx.test(values);
+  }
+
+  testArrayRegExpValues (values) {
+    const regEx = new RegExp(/\[.*\]/gi);
+    return regEx.test(values);
   }
 
   typesSet () {
@@ -146,14 +158,15 @@ class Encoder extends Component{
       return;
     try{
       let types = this.state.types.split(",");
-      let values = this.state.values.split(",");
-      console.log(this.parseForEncode(this.state.values))
+      let values = this.parseForEncode(this.state.values);
 
       Log(types,values);
 
       if(types.length !== values.length)
         throw new Error("Types/values mismatch");
       let encoded = this.abiCoder.encode(types, values);
+      Log(encoded);
+
       this.setState({ encoded: encoded.substring(2) });
     }
     catch(e){
@@ -175,6 +188,10 @@ class Encoder extends Component{
 
   handleChange (name,  event)  {
     this.setState({ [name]: event.target.value,submitted: false });
+  }
+
+  selectTarget (clickEvent) {
+    clickEvent.target.select();
   }
 
   render(){
@@ -233,10 +250,13 @@ class Encoder extends Component{
                     shrink: true,
                   }}
                   value={this.state.encoded}
-                  disabled
                   helperText="Abi encoded arguments"
                   fullWidth
                   margin="normal"
+                  variant="filled"
+                  readOnly={true}
+                  onClick={this.selectTarget}
+                  onFocus={this.selectTarget}
                 />
             </FormControl>
         </Card>}
