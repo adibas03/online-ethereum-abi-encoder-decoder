@@ -39,13 +39,12 @@ class Encoder extends Component{
     return matched.map((val) => {
       if (this.testArrayRegExpValues(val)) {
         val = this.stripArray(val);
-        debugger;
       }
       if (this.testRegExpValues(val)) {
         val = this.parseForEncode(val);
       }
       return val;
-    })
+    });
   }
 
   validateType (self) {
@@ -94,12 +93,12 @@ class Encoder extends Component{
 
   stripArray(value) {
     const regEx = new RegExp(/^\[|\]$/gi);
-    return value.replace(regEx,'');
+    return value.replace(regEx,"");
   }
 
   matchRegExpValues (values) {
     const regEx = new RegExp(/(\[[0-9a-zA-Z,]+\]|[0-9a-zA-Z]+)/gi);
-    return values.match(regEx)
+    return values.match(regEx);
   }
 
   testRegExp (search, array) {
