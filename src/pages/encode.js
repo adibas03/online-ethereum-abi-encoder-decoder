@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import FormControl from "@material-ui/core/FormControl";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+
 
 import ethers from "ethers";
 import ValidTypes from "../config/types";
@@ -15,19 +16,11 @@ class Encoder extends Component{
   constructor(props) {
     super(props);
 
-    //Hanle binds
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleRequestClose = this.handleRequestClose.bind(this);
+    //Handle binds
     this.encodeData = this.encodeData.bind(this);
 
-    this.testRegExp = this.testRegExp.bind(this);
-    this.validateType = this.validateType.bind(this);
-    this.typesSet = this.typesSet.bind(this);
     this.typeUpdated = this.typeUpdated.bind(this);
     this.valueUpdated = this.valueUpdated.bind(this);
-    this.formFilled = this.formFilled.bind(this);
-    this.errorExists = this.errorExists.bind(this);
 
     this.state = {
       types : "",
@@ -40,14 +33,18 @@ class Encoder extends Component{
     this.abiCoder = new ethers.utils.AbiCoder();
   }
 
-
-  testRegExp (search, array) {
-    let found = 0;
-    array.forEach(function(a){
-      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index === 0)
-      found++;
+  parseForEncode (values) {
+    const matched = this.matchRegExpValues(values);
+    
+    return matched.map((val) => {
+      if (this.testArrayRegExpValues(val)) {
+        val = this.stripArray(val);
+      }
+      if (this.testRegExpValues(val)) {
+        val = this.parseForEncode(val);
+      }
+      return val;
     });
-    return found;
   }
 
   validateType (self) {
@@ -61,13 +58,16 @@ class Encoder extends Component{
     });
 
     vals.forEach(function(v,id){
-      if(!(id === vals.length-1 && v === "" ))
+      if(id === vals.length-1 && v === "") {
+        return;
+      } else {
         if(that.testRegExp(v,array) < 1){
           clean = false;
           let error = {};error["types"] = true;
           let state = {error:Object.assign(that.state.error,error)};
           return that.setState(state);
         }
+      }
     });
     if(clean){
       let error = {};error["types"] = false;
@@ -79,14 +79,45 @@ class Encoder extends Component{
   validateValue (self) {
     if(!self && this.state.values.length === 0 && !this.state.submitted)
       return;
-    let vals = this.state.values.split(","),error = {};
-    if(vals.length !== this.state.types.split(",").length )
+
+    let error = {};
+    const matchedValues = this.matchRegExpValues(this.state.values) || [];
+    if(this.state.types.split(",").length !== matchedValues.length)
       error["values"] = true;
     else
       error["values"] = false;
 
     let state = {error:Object.assign(this.state.error,error)};
     return this.setState(state);
+  }
+
+  stripArray(value) {
+    const regEx = new RegExp(/^\[|\]$/gi);
+    return value.replace(regEx,"");
+  }
+
+  matchRegExpValues (values) {
+    const regEx = new RegExp(/(\[[0-9a-zA-Z,]+\]|[0-9a-zA-Z]+)/gi);
+    return values.match(regEx);
+  }
+
+  testRegExp (search, array) {
+    let found = 0;
+    array.forEach(function(a){
+      if(new RegExp(a).test(search) && search.trim().match(new RegExp(a)).index === 0)
+      found++;
+    });
+    return found;
+  }
+
+  testRegExpValues (values) {
+    const regEx = new RegExp(/(,+)/gi);
+    return regEx.test(values);
+  }
+
+  testArrayRegExpValues (values) {
+    const regEx = new RegExp(/\[.*\]/gi);
+    return regEx.test(values);
   }
 
   typesSet () {
@@ -126,13 +157,15 @@ class Encoder extends Component{
       return;
     try{
       let types = this.state.types.split(",");
-      let values = this.state.values.split(",");
+      let values = this.parseForEncode(this.state.values);
 
       Log(types,values);
 
       if(types.length !== values.length)
         throw new Error("Types/values mismatch");
       let encoded = this.abiCoder.encode(types, values);
+      Log(encoded);
+
       this.setState({ encoded: encoded.substring(2) });
     }
     catch(e){
@@ -152,20 +185,12 @@ class Encoder extends Component{
     return false;
   }
 
-  handleRequestClose ()  {
-    this.setState({
-      open: false,
-    });
-  }
-
-  handleClick ()  {
-    this.setState({
-      open: true,
-    });
-  }
-
   handleChange (name,  event)  {
     this.setState({ [name]: event.target.value,submitted: false });
+  }
+
+  selectTarget (clickEvent) {
+    clickEvent.target.select();
   }
 
   render(){
@@ -201,7 +226,7 @@ class Encoder extends Component{
                   error={this.state.error.values}
                   onChange={this.valueUpdated}
                   onKeyUp={this.valueUpdated}
-                  helperText="Add the values to match the number of types indicated above, each seperated by a comma (No spaces)"
+                  helperText="Add the values to match the number of types indicated above, each seperated by a comma (No spaces), use [ ] to wrap array"
                   fullWidth
                   margin="normal"
                 />
@@ -224,10 +249,13 @@ class Encoder extends Component{
                     shrink: true,
                   }}
                   value={this.state.encoded}
-                  disabled
                   helperText="Abi encoded arguments"
                   fullWidth
                   margin="normal"
+                  variant="filled"
+                  readOnly={true}
+                  onClick={this.selectTarget}
+                  onFocus={this.selectTarget}
                 />
             </FormControl>
         </Card>}
