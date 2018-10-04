@@ -6,7 +6,6 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import ethers from "ethers";
 import ValidTypes from "../config/types";
 import { suffixed } from "../config/types";
 const Log = window.console.log;
@@ -29,7 +28,8 @@ class Decoder extends Component{
       submitted:false
       };
 
-    this.abiCoder = new ethers.utils.AbiCoder();
+    const { eth } = this.props;
+    this.web3AbiCoder = eth.abi;
   }
 
   testRegExp (search, array) {
@@ -109,7 +109,7 @@ class Decoder extends Component{
 
       Log(types,value);
 
-      let decoded = this.abiCoder.decode(types, value);
+      let decoded = this.web3AbiCoder.decodeParameters(types, value);
       
       decoded = this.parseDecoded(decoded);
       Log(decoded);
@@ -123,7 +123,8 @@ class Decoder extends Component{
 
   parseDecoded (toParse) {
     const that = this;
-    return toParse.map(function(d){
+    return Object.keys(toParse).map(function(id){
+      const d = toParse[id];
       return (typeof d === "object" && d.length !== undefined) ?
         JSON.stringify(that.parseDecoded(d)).replace(/"/g,"")
          :
@@ -225,6 +226,7 @@ class Decoder extends Component{
 
 Decoder.propTypes = {
   classes: PropTypes.object.isRequired,
+  eth: PropTypes.object
 };
 
 export default Decoder;
