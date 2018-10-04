@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import Eth from "web3-eth";
+
 import { title } from "../config/app";
 
 import Encoder from "./encode";
@@ -73,6 +75,11 @@ const ActionChooser = (data) =>{
 class Index extends Component {
   constructor(props) {
     super(props);
+    try {
+      this.eth = new Eth(Eth.givenProvider || "http://localhost:8545");
+    } catch (e) {
+      this.eth = new Eth("wss://mainnet.infura.io/ws");
+    }
 
     //Hanle binds
     this.handleActionChange = this.handleActionChange.bind(this);
@@ -94,6 +101,7 @@ class Index extends Component {
 
   render() {
     const { classes } = this.props;
+    const props = { eth: this.eth };
 
     return (
       <div>
@@ -124,10 +132,10 @@ class Index extends Component {
               <Route path="/" strict exact>
               </Route>
               <Route path="/encode">
-                  <Encoder {...this.props}/>
+                  <Encoder {...Object.assign({}, props, this.props)}/>
               </Route>
               <Route path="/decode">
-                  <Decoder{...this.props}/>
+                  <Decoder {...Object.assign({}, props, this.props)}/>
               </Route>
             </Switch>
           </div>
@@ -138,6 +146,7 @@ class Index extends Component {
 
 Index.propTypes = {
   classes: PropTypes.object.isRequired,
+  eth: PropTypes.any
 };
 
 export default withRoot(withStyles( styles )(Index));

@@ -7,7 +7,6 @@ import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 
 
-import ethers from "ethers";
 import ValidTypes from "../config/types";
 import { suffixed } from "../config/types";
 const Log = window.console.log;
@@ -30,7 +29,8 @@ class Encoder extends Component{
       submitted:false
       };
 
-    this.abiCoder = new ethers.utils.AbiCoder();
+    const { eth } = this.props;
+    this.web3AbiCoder = eth.abi;
   }
 
   parseForEncode (values) {
@@ -163,7 +163,8 @@ class Encoder extends Component{
 
       if(types.length !== values.length)
         throw new Error("Types/values mismatch");
-      let encoded = this.abiCoder.encode(types, values);
+
+      let encoded = this.web3AbiCoder.encodeParameters(types, values);
       Log(encoded);
 
       this.setState({ encoded: encoded.substring(2) });
@@ -266,6 +267,7 @@ class Encoder extends Component{
 
 Encoder.propTypes = {
   classes: PropTypes.object.isRequired,
+  eth: PropTypes.object
 };
 
 export default Encoder;
