@@ -31,8 +31,7 @@
   },
   "dependencies": {
     "@material-ui/core": "3.0.3",
-    "ethers": "3.0.27",
-    "web3": "1.0.0-beta.36"
+    "web3-eth": "1.0.0-beta.36"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
