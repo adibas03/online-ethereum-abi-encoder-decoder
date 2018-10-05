@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import createBrowserHistory from "history/createBrowserHistory";
 import PropTypes from "prop-types";
 
 import Eth from "web3-eth";
@@ -75,6 +76,7 @@ const ActionChooser = (data) =>{
 class Index extends Component {
   constructor(props) {
     super(props);
+
     try {
       this.eth = new Eth(Eth.givenProvider || "http://localhost:8545");
     } catch (e) {
@@ -85,10 +87,19 @@ class Index extends Component {
     this.handleActionChange = this.handleActionChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
-    this.state = {
-        action:"",
-        open: false,
-      };
+    const history = createBrowserHistory();
+    const hash = history.location.hash;
+    const action = hash && hash.substring(hash.indexOf("/")+1, hash.length);
+
+    if (hash !== "#/" && allowedActions.includes(action)) {
+      this.state = {
+          action
+        };
+    } else {
+      this.state = {
+          action: ""
+        };
+    }
   }
 
   handleActionChange (event) {
@@ -124,17 +135,17 @@ class Index extends Component {
                   {allowedActions[1]}
                   </MenuItem>
                 </Select>
-                <ActionChooser {...{state:this.state}} />
+                <ActionChooser {...{state: this.state}} />
               </FormControl>
             </Card>
 
             <Switch>
               <Route path="/" strict exact>
               </Route>
-              <Route path="/encode">
+              <Route path={`/${allowedActions[0]}`}>
                   <Encoder {...Object.assign({}, props, this.props)}/>
               </Route>
-              <Route path="/decode">
+              <Route path={`/${allowedActions[1]}`}>
                   <Decoder {...Object.assign({}, props, this.props)}/>
               </Route>
             </Switch>
