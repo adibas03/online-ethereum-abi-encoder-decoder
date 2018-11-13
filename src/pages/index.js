@@ -78,7 +78,11 @@ class Index extends Component {
     super(props);
 
     try {
-      this.eth = new Eth(Eth.givenProvider || "http://localhost:8545");
+      if (window.ethereum) {
+        this.eth = new Eth(window.ethereum);
+      } else {
+        this.eth = new Eth(Eth.givenProvider || "http://localhost:8545");
+      }
     } catch (e) {
       this.eth = new Eth("wss://mainnet.infura.io/ws");
     }
