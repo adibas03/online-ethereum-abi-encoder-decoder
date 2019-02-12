@@ -247,7 +247,7 @@ class Encoder extends Component{
                   error={this.state.error.values}
                   onChange={this.valueUpdated}
                   onKeyUp={this.valueUpdated}
-                  helperText="Add the values to match the number of types indicated above, each seperated by a comma (No spaces), use [ ] to wrap array"
+                  helperText={`Add the values to match the number of types indicated above, each seperated by a comma (No spaces), use [ ] to wrap array, use " " to wrap values containing comma`}
                   fullWidth
                   margin="normal"
                 />
