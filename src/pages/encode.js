@@ -89,9 +89,14 @@ class Encoder extends Component{
     if(!self && this.state.values.length === 0 && !this.state.submitted)
       return;
 
+    const types = this.state.types.split(",");
+    const arrayregex = new RegExp(/(\[.*\])/);
     let error = {};
+
     const matchedValues = this.parseForEncode(this.state.values) || [];
-    if(this.state.types.split(",").length !== matchedValues.length)
+    const unsetArray = matchedValues.length && matchedValues.some((val, index) => arrayregex.test(types[index]) && (typeof val !== 'object' || typeof val.length === 'undefined'));
+
+    if(types.length !== matchedValues.length || unsetArray)
       error["values"] = true;
     else
       error["values"] = false;
