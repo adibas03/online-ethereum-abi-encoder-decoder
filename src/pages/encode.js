@@ -35,16 +35,25 @@ class Encoder extends Component{
 
   parseForEncode (values) {
     const matched = this.matchRegExpValues(values);
+    let overlook = false
     
-    return matched.map((val) => {
-      if (this.testArrayRegExpValues(val)) {
-        val = this.stripArray(val);
-      }
-      if (this.testRegExpValues(val)) {
-        val = this.parseForEncode(val);
-      }
-      return val;
-    });
+    return matched ?
+      matched.map((val) => {
+        if (!val || val === ',') {
+          return '';
+        }
+        if (val &&  this.testArrayRegExpValues(val)) {
+          val = this.stripArray(val);
+        }
+        if (this.testStringRegExpValues(val)) {
+          val = val.substring(1, val.length-1);
+          overlook = true;
+        }
+        if (!overlook && this.testRegExpValues(val)) {
+          val = this.parseForEncode(val);
+        }
+        return val;
+      }) : [];
   }
 
   validateType (self) {
@@ -81,7 +90,7 @@ class Encoder extends Component{
       return;
 
     let error = {};
-    const matchedValues = this.matchRegExpValues(this.state.values) || [];
+    const matchedValues = this.parseForEncode(this.state.values) || [];
     if(this.state.types.split(",").length !== matchedValues.length)
       error["values"] = true;
     else
@@ -97,7 +106,8 @@ class Encoder extends Component{
   }
 
   matchRegExpValues (values) {
-    const regEx = new RegExp(/(\[[0-9a-zA-Z,]+\]|[0-9a-zA-Z]+)/gi);
+    // eslint-disable-next-line
+    const regEx = new RegExp(/(\[([0-9a-z\s:!@#'",$%^&?*)(\\\/[\]+=._-]+(?=(,|)))*\]|("[0-9a-z\s:!@#'$%^&?*)(\\\/[\]+=.,_-]+"(?=(,|$))|"",$|(?<=,)""$)|([0-9a-z\s:!@#'$%^&?*)(\\\/+=._-]+(?=(,|$))|(?<=,),|(?<=,)$))/gi);
     return values.match(regEx);
   }
 
@@ -117,6 +127,11 @@ class Encoder extends Component{
 
   testArrayRegExpValues (values) {
     const regEx = new RegExp(/\[.*\]/gi);
+    return regEx.test(values);
+  }
+
+  testStringRegExpValues (values) {
+    const regEx = new RegExp(/^".*"$/gi);
     return regEx.test(values);
   }
 
