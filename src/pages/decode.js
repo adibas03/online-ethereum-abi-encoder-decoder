@@ -123,13 +123,20 @@ class Decoder extends Component{
 
   parseDecoded (toParse) {
     const that = this;
-    return Object.keys(toParse).map(function(id){
+    const typeLength = this.state.types.split(",").length;
+    const parsed = Object.keys(toParse).map(function(id){
       const d = toParse[id];
       return (typeof d === "object" && d.length !== undefined) ?
         JSON.stringify(that.parseDecoded(d)).replace(/"/g,"")
          :
         d.toString();
     });
+    //Quick fix to hide array length
+    //TODO write more elegant solution
+    if (parsed.length > typeLength && parsed[parsed.length-1] && Number(parsed[parsed.length-1]).toString() === parsed[parsed.length-1]) {
+      parsed.splice(parsed.length-1, 1);
+    }
+    return parsed;
   }
 
   formFilled () {
