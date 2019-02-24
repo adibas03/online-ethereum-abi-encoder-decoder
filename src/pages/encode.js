@@ -35,16 +35,28 @@ class Encoder extends Component{
 
   parseForEncode (values) {
     const matched = this.matchRegExpValues(values);
+    let overlook = false;
     
-    return matched.map((val) => {
-      if (this.testArrayRegExpValues(val)) {
-        val = this.stripArray(val);
-      }
-      if (this.testRegExpValues(val)) {
-        val = this.parseForEncode(val);
-      }
-      return val;
-    });
+    return matched ?
+      matched.map((val) => {
+        if (!val || val === ",") {
+          return "";
+        }
+        if (val[val.length-1] === ",") {
+          val = val.substring(0, val.length-1);
+        }
+        if (val &&  this.testArrayRegExpValues(val)) {
+          val = this.stripArray(val);
+        }
+        if (this.testStringRegExpValues(val)) {
+          val = val.substring(1, val.length-1);
+          overlook = true;
+        }
+        if (!overlook && this.testRegExpValues(val)) {
+          val = this.parseForEncode(val);
+        }
+        return val;
+      }) : [];
   }
 
   validateType (self) {
@@ -80,9 +92,14 @@ class Encoder extends Component{
     if(!self && this.state.values.length === 0 && !this.state.submitted)
       return;
 
+    const types = this.state.types.split(",");
+    const arrayregex = new RegExp(/(\[.*\])/);
     let error = {};
-    const matchedValues = this.matchRegExpValues(this.state.values) || [];
-    if(this.state.types.split(",").length !== matchedValues.length)
+
+    const matchedValues = this.parseForEncode(this.state.values) || [];
+    const unsetArray = matchedValues.length && matchedValues.some((val, index) => arrayregex.test(types[index]) && (typeof val !== "object" || typeof val.length === "undefined"));
+
+    if(types.length !== matchedValues.length || unsetArray)
       error["values"] = true;
     else
       error["values"] = false;
@@ -97,8 +114,13 @@ class Encoder extends Component{
   }
 
   matchRegExpValues (values) {
-    const regEx = new RegExp(/(\[[0-9a-zA-Z,]+\]|[0-9a-zA-Z]+)/gi);
-    return values.match(regEx);
+    const regEx = new RegExp(/(\[[0-9a-z\s:!@#'",$%^&?*)(\\/[\]+=._-]+,?\],?|("[0-9a-z\s:!@#'$%^&?*)(\\/[\]+=.,_-]+",?|"",?)|([0-9a-z\s:!@#'$%^&?*)(\\/+=._-]+,?|,))/gi);
+    const matched = values.match(regEx);
+
+    if (values[values.length-1] === ",") {
+      matched.push("");
+    }
+    return matched;
   }
 
   testRegExp (search, array) {
@@ -117,6 +139,11 @@ class Encoder extends Component{
 
   testArrayRegExpValues (values) {
     const regEx = new RegExp(/\[.*\]/gi);
+    return regEx.test(values);
+  }
+
+  testStringRegExpValues (values) {
+    const regEx = new RegExp(/^".*"$/gi);
     return regEx.test(values);
   }
 
@@ -227,7 +254,7 @@ class Encoder extends Component{
                   error={this.state.error.values}
                   onChange={this.valueUpdated}
                   onKeyUp={this.valueUpdated}
-                  helperText="Add the values to match the number of types indicated above, each seperated by a comma (No spaces), use [ ] to wrap array"
+                  helperText={`Add the values to match the number of types indicated above, each seperated by a comma (No spaces), use [ ] to wrap array, use " " to wrap values containing comma${""}`}
                   fullWidth
                   margin="normal"
                 />
