@@ -35,10 +35,12 @@ class Encoder extends Component{
 
   parseForEncode (values) {
     const matched = this.matchRegExpValues(values);
-    let overlook = false;
     
     return matched ?
       matched.map((val) => {
+        let overlook = false;
+        let snoop = false;
+
         if (!val || val === ",") {
           return "";
         }
@@ -47,12 +49,13 @@ class Encoder extends Component{
         }
         if (val &&  this.testArrayRegExpValues(val)) {
           val = this.stripArray(val);
+          snoop = true;
         }
         if (this.testStringRegExpValues(val)) {
           val = val.substring(1, val.length-1);
           overlook = true;
         }
-        if (!overlook && this.testRegExpValues(val)) {
+        if (snoop || (!overlook && this.testRegExpValues(val))) {
           val = this.parseForEncode(val);
         }
         return val;
@@ -97,7 +100,10 @@ class Encoder extends Component{
     let error = {};
 
     const matchedValues = this.parseForEncode(this.state.values) || [];
-    const unsetArray = matchedValues.length && matchedValues.some((val, index) => arrayregex.test(types[index]) && (typeof val !== "object" || typeof val.length === "undefined"));
+    const unsetArray = matchedValues.length && matchedValues.some((val, index) =>
+      (arrayregex.test(types[index]) && (typeof val !== "object" || typeof val.length === "undefined")) ||
+      (!arrayregex.test(types[index]) && (typeof val === "object"))
+    );
 
     if(types.length !== matchedValues.length || unsetArray)
       error["values"] = true;
@@ -114,7 +120,7 @@ class Encoder extends Component{
   }
 
   matchRegExpValues (values) {
-    const regEx = new RegExp(/(\[[0-9a-z\s:!@#'",$%^&?*)(\\/[\]+=._-]+,?\],?|("[0-9a-z\s:!@#'$%^&?*)(\\/[\]+=.,_-]+",?|"",?)|([0-9a-z\s:!@#'$%^&?*)(\\/+=._-]+,?|,))/gi);
+    const regEx = new RegExp(/(\[[0-9a-z\s:!@#'",$%^&?*)(\\+=._-]+,?\],?|("[0-9a-z\s:!@#'$%^&?*)(\\+=.,_-]+",?|"",?)|([0-9a-z\s:!@#'$%^&?*)(\\/+=._-]+,?|,))/gi);
     const matched = values.match(regEx);
 
     if (values[values.length-1] === ",") {
