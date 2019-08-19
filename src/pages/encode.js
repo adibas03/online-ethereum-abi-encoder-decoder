@@ -78,14 +78,16 @@ class Encoder extends Component{
       } else {
         if(that.testRegExp(v,array) < 1){
           clean = false;
-          let error = {};error["types"] = true;
+          let error = {};
+          error["types"] = true;
           let state = {error:Object.assign(that.state.error,error)};
           return that.setState(state);
         }
       }
     });
     if(clean){
-      let error = {};error["types"] = false;
+      let error = {};
+      error["types"] = false;
       let state = {error:Object.assign(this.state.error,error)};
       return this.setState(state);
     }
@@ -212,7 +214,8 @@ class Encoder extends Component{
   }
 
   errorExists () {
-    for(let i in this.state.error){
+    const errorTypes = Object.keys(this.state.error);
+    for (let i=0; i<errorTypes.length; i++ ) {
       if(this.state.error[i])
         return true;
     }

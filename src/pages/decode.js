@@ -144,7 +144,8 @@ class Decoder extends Component{
   }
 
   errorExists () {
-    for(let i in this.state.error){
+    const errorTypes = Object.keys(this.state.error);
+    for (let i=0; i<errorTypes.length; i++ ) {
       if(this.state.error[i])
         return true;
     }

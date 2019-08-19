@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+  - "8"
   - "10"
   - "12"
 
@@ -17,4 +18,4 @@ deploy:
   local-dir: "build"
   on:
     branch: master
-    node: "8"
+    node: "10"
