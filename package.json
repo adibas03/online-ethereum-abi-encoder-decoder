@@ -1,6 +1,6 @@
 {
   "name": "online-ethereum-abi-encoder",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A quick online tool to abi-encode constructor arguments used in ethereum's solidity",
   "main": "index.js",
   "scripts": {
@@ -30,25 +30,37 @@
     "email": "adibas03@gmail.com"
   },
   "dependencies": {
-    "@material-ui/core": "3.0.3",
-    "web3-eth": "1.0.0-beta.36"
+    "@material-ui/core": "^3.9.3",
+    "web3-eth": "^1.2.0"
   },
   "devDependencies": {
-    "eslint": "^5.5.0",
+    "eslint": "^6.2.0",
     "jss": "9.8.7",
     "jss-preset-default": "4.5.0",
-    "prop-types": "15.6.2",
-    "react": "16.5.0",
-    "react-alert": "4.0.4",
-    "react-dom": "16.5.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0",
+    "react-alert": "^5.5.0",
+    "react-dom": "^16.9.0",
     "react-jss": "8.6.1",
-    "react-router-dom": "4.3.1",
-    "react-scripts": "1.1.5",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.1.1",
     "recompose": "0.30.0"
   },
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/adibas03/online-ethereum-abi-encoder/issues"
   },
-  "homepage": "./"
+  "homepage": "./",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

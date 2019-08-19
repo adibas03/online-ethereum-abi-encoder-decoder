@@ -144,7 +144,8 @@ class Decoder extends Component{
   }
 
   errorExists () {
-    for(let i in this.state.error){
+    const errorTypes = Object.keys(this.state.error);
+    for (let i=0; i<errorTypes.length; i++ ) {
       if(this.state.error[i])
         return true;
     }
@@ -156,6 +157,7 @@ class Decoder extends Component{
   }
 
   selectTarget (clickEvent) {
+    if (clickEvent.target.type !== "textarea") return;
     clickEvent.target.select();
   }
 
@@ -215,14 +217,16 @@ class Decoder extends Component{
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  InputProps={{
+                    onClick: this.selectTarget,
+                    onFocus: this.selectTarget
+                  }}
                   value={this.state.decoded}
-                  helperText="Decodecoded Abi arguments"
+                  helperText="Decoded Abi arguments"
                   fullWidth
                   margin="normal"
                   variant="filled"
                   readOnly={true}
-                  onClick={this.selectTarget}
-                  onFocus={this.selectTarget}
                 />
             </FormControl>
         </Card>}
