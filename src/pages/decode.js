@@ -156,7 +156,7 @@ class Decoder extends Component{
   }
 
   selectTarget (clickEvent) {
-    if (clickEvent.target.type !== 'textarea') return;
+    if (clickEvent.target.type !== "textarea") return;
     clickEvent.target.select();
   }
 

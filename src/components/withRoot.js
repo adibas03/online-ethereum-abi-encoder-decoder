@@ -1,5 +1,3 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-
 import React, { Component } from "react";
 import { HashRouter } from "react-router-dom";
 
