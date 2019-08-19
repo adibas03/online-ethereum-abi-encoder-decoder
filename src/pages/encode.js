@@ -224,6 +224,7 @@ class Encoder extends Component{
   }
 
   selectTarget (clickEvent) {
+    if (clickEvent.target.type !== 'textarea') return;
     clickEvent.target.select();
   }
 
@@ -282,14 +283,16 @@ class Encoder extends Component{
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  InputProps={{
+                    onClick: this.selectTarget,
+                    onFocus: this.selectTarget
+                  }}
                   value={this.state.encoded}
                   helperText="Abi encoded arguments"
                   fullWidth
                   margin="normal"
                   variant="filled"
                   readOnly={true}
-                  onClick={this.selectTarget}
-                  onFocus={this.selectTarget}
                 />
             </FormControl>
         </Card>}
