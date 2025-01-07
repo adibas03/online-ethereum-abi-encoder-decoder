@@ -35,7 +35,7 @@ export default function Encode() {
         <Description>Add the encoded data for decoding</Description>
       </div>
 
-      <ActionButton>Decode</ActionButton>
+      <ActionButton>Decode data</ActionButton>
     </div>
   );
 }

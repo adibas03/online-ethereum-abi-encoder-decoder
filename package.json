@@ -7,6 +7,7 @@
     "build": "cross-env NODE_ENV=production react-router build",
     "dev": "react-router dev",
     "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
+    "clean": "rm -rf node_modules build",
     "typecheck": "react-router typegen && tsc"
   },
   "repository": {
