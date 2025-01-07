@@ -1,8 +1,8 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
+.DS_Store
 /node_modules
-/_src
 
 # testing
 /coverage
@@ -22,3 +22,9 @@ yarn-debug.log*
 yarn-error.log*
 
 yarn.lock
+
+
+
+# React Router
+/.react-router/
+/build/
