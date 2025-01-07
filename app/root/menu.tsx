@@ -9,6 +9,7 @@ export function Menu() {
         <div className="w-[350px] max-w-[100vw] p-4 text-center">
           {allActions.map((a) => (
             <NavLink
+              key={a}
               to={`/${a}`}
               className={({ isActive }) =>
                 [
