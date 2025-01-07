@@ -2,6 +2,7 @@ import Description from "app/actions/components/description";
 import InputLabel from "app/actions/components/inputLabel";
 import InputWrap from "app/actions/components/inputWrap";
 import ActionButton from "app/actions/components/actionButton";
+import Types from "app/config/types";
 
 export default function Encode() {
   return (
@@ -17,7 +18,8 @@ export default function Encode() {
           />
         </InputWrap>
         <Description>
-          Add the value types, each seperated by a comma
+          Add the value types, each seperated by a comma (
+          {Types.slice(0, 2).join(",")}...)
         </Description>
       </div>
 
