@@ -10,7 +10,12 @@ export function Menu() {
           {allActions.map((a) => (
             <NavLink
               to={`/${a}`}
-              className="rounded border-b dark:border-gray-200 m-2 p-2"
+              className={({ isActive }) =>
+                [
+                  isActive ? "dark:border-gray-200" : "dark:border-gray-700",
+                  "rounded border-b  m-2 p-2",
+                ].join(" ")
+              }
             >
               {capitalize(a)}
             </NavLink>
