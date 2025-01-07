@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
 
-export function Header() {
+export default function Header() {
   return (
     <div className="flex-1 flex flex-col items-center gap-16 min-h-0 border-b-2 dark:border-gray-700">
       <header className="flex flex-col items-center gap-9">

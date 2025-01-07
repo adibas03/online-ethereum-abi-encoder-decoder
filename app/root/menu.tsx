@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 import { capitalize } from "app/utils/string";
 import allActions from "app/config/actions";
 
-export function Menu() {
+export default function Menu() {
   return (
     <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
       <header className="flex flex-col items-center gap-9">

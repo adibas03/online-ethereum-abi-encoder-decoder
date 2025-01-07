@@ -6,8 +6,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import { Header } from "./root/header";
-import { Menu } from "./root/menu";
+import { title, description } from "app/config/app";
+import Header from "app/root/header";
+import Menu from "app/root/menu";
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
@@ -25,6 +26,16 @@ export const links: Route.LinksFunction = () => [
   },
   { rel: "stylesheet", href: stylesheet },
 ];
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title },
+    {
+      name: "description",
+      content: description,
+    },
+  ];
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
