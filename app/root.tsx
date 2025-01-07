@@ -9,7 +9,7 @@ import {
 import { title, description } from "app/config/app";
 import Header from "app/root/header";
 import Menu from "app/root/menu";
-import { loadEth } from "app/utils/eth";
+import { getEth } from "app/utils/eth";
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
@@ -59,7 +59,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  loadEth();
+  getEth();
   return <Outlet />;
 }
 

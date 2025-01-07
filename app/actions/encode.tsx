@@ -5,21 +5,25 @@ import InputWrap from "app/actions/components/inputWrap";
 import ActionButton from "app/actions/components/actionButton";
 import Types from "app/config/types";
 import type { Route } from "../+types/root";
+import { encodeData } from "app/utils/eth";
 
-export const clientAction = async ({
-  request,
-  params,
-  serverAction,
-  ...rest
-}: Route.ClientActionArgs) => {
-  console.log({
-    request,
-    params,
-    serverAction,
-    rest,
-  });
-  // const data = await serverAction();
-  // return data;
+const FIELDS = {
+  types: "types",
+  decoded: "decoded",
+};
+
+export const clientAction = async ({ request }: Route.ClientActionArgs) => {
+  const formData = await request.formData();
+
+  const types = formData.get(FIELDS.types);
+  const decoded = formData.get(FIELDS.decoded);
+
+  const encoded = encodeData(
+    (types || "").toString(),
+    (decoded || "").toString()
+  );
+
+  console.log({ encoded });
 };
 
 export default function Encode() {
@@ -31,8 +35,9 @@ export default function Encode() {
           <InputWrap>
             <input
               type="text"
-              name="types"
-              id="types"
+              name={FIELDS.types}
+              id={FIELDS.types}
+              required
               className="w-full bg-transparent border-0"
             />
           </InputWrap>
@@ -46,8 +51,9 @@ export default function Encode() {
           <InputLabel>Argument Values</InputLabel>
           <InputWrap>
             <textarea
-              name="decoded"
-              id="decoded"
+              name={FIELDS.decoded}
+              id={FIELDS.decoded}
+              required
               className="w-full bg-transparent border-0"
             />
           </InputWrap>
