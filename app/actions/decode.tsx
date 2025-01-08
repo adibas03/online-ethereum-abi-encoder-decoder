@@ -18,12 +18,16 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
   const types = formData.get(FIELDS.types);
   const encoded = formData.get(FIELDS.encoded);
 
-  const decoded = decodeData(
-    (types || "").toString(),
-    (encoded || "").toString()
-  );
+  try {
+    const decoded = decodeData(
+      (types || "").toString(),
+      (encoded || "").toString()
+    );
 
-  console.log({ decoded });
+    console.log({ decoded });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export default function Encode() {
