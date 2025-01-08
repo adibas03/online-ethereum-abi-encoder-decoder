@@ -1,5 +1,5 @@
 const suffixed = ["uint", "int", "bytes", "fixed", "ufixed"];
-const notSuffixed = ["address", "string", "bool", "function"];
+const notSuffixed = ["address", "string", "bool"];
 
 export default [...suffixed, ...notSuffixed];
 
