@@ -42,5 +42,5 @@ https://github.com/adibas03/online-ethereum-abi-encoder-decoder/issues
 
 ## Contribution
 
-Buy me a Coffe or a Beer  
+Buy me a Coffee or a Beer  
 Ethereum: **0x965D1C9987BD2c34e151E63d60AFf8E9dB6b1561**

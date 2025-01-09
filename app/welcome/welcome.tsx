@@ -11,7 +11,7 @@ export function Welcome() {
                 Welcome to the Online Ethereum Abi encoder and decoder
               </p>
               <p className="text-sm">
-                The tool was designed to make easy encoding and decoding of
+                This tool was designed to make easy encoding and decoding of
                 Ethereum solidity abi data.
               </p>
 
