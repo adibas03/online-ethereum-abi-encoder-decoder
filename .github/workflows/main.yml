@@ -34,9 +34,9 @@ jobs:
           cp build/client/index.html build/client/404.html
           ls -al build/client
 
-      # - name: Simple deploy with git
-      #   uses: rdarida/simple-github-pages-deploy-action@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GHB_DEFAULT_TOKEN }}
-      #   with: # optional
-      #     git-base-folder: "build/client"
+      - name: Simple deploy with git
+        uses: rdarida/simple-github-pages-deploy-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHB_DEFAULT_TOKEN }}
+        with: # optional
+          git-base-folder: "build/client"
