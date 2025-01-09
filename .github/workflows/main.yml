@@ -1,6 +1,8 @@
 name: Deploy to gh-pages
 
 on:
+  pull_request:
+    branches: []
   push:
     branches: [web-eth]
 
@@ -29,6 +31,7 @@ jobs:
         run: |
           export NODE_OPTIONS=--max_old_space_size=8192
           npm run build
+          cp build/client/index.html build/client/404.html
           ls -al build/client
 
       # - name: Simple deploy with git
