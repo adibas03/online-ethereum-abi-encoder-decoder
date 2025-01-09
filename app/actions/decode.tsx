@@ -22,9 +22,6 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
 
   const errors = {
     ...(!!types && !validateType(types) ? { [FIELDS.types]: true } : {}),
-    ...(!!encoded && !validateValueForEncode(encoded, types)
-      ? { [FIELDS.encoded]: true }
-      : {}),
   };
 
   if (

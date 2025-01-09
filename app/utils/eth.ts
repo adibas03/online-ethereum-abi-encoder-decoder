@@ -93,20 +93,23 @@ export function encodeData(types: string, values: string) {
 }
 
 
-export function parseDecoded(toParse: Parsable, types?: string[]) {
+export function parseDecoded(toParse: Parsable, types: string[]) {
     const typeLength = (types || []).length;
-    const parsed: string[] = Object.keys(toParse).map(function (id: string) {
+    const parsed: string[] = Object.keys(toParse).map(function (id: string, index) {
         const d: any = toParse[id];
-        return (typeof d === "object" && d.length !== undefined) ?
-            JSON.stringify(parseDecoded(d)).replace(/"/g, "")
+        const snoop = typeof d === "object" && d.length !== undefined
+        return (snoop) ?
+            JSON.stringify(parseDecoded(d, parseTypes(types[index]))).replace(/"/g, "")
             :
             d.toString();
     });
+
     //Quick fix to hide array length
     //TODO write more elegant solution
     if (parsed.length > typeLength && !!parsed[parsed.length - 1] && Number(parsed[parsed.length - 1]).toString() === parsed[parsed.length - 1]) {
         parsed.splice(parsed.length - 1, 1);
     }
+
     return parsed;
 }
 
