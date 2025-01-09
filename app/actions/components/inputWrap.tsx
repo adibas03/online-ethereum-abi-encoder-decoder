@@ -1,3 +1,18 @@
-export default function inputWrap({ children }: { children: React.ReactNode }) {
-  return <div className="mt-2 border-b border-b-gray-400">{children}</div>;
+import type { AriaAttributes } from "react";
+
+export default function inputWrap({
+  children,
+  ariaInvalid,
+}: {
+  children: React.ReactNode;
+  ariaInvalid?: boolean;
+}) {
+  return (
+    <div
+      aria-invalid={ariaInvalid}
+      className="mt-2 border-b border-b-gray-400 aria-invalid:border-b-red-600"
+    >
+      {children}
+    </div>
+  );
 }

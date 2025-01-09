@@ -1,16 +1,11 @@
-import { Form } from "react-router";
+import { useFetcher, data, Form } from "react-router";
 import Description from "app/actions/components/description";
 import InputLabel from "app/actions/components/inputLabel";
 import InputWrap from "app/actions/components/inputWrap";
 import ActionButton from "app/actions/components/actionButton";
-import Types from "app/config/types";
+import { FIELDS, Labels, Descriptions } from "app/config/fields";
 import type { Route } from "../+types/root";
 import { decodeData } from "app/utils/eth";
-
-const FIELDS = {
-  types: "types",
-  encoded: "encoded",
-};
 
 export const clientAction = async ({ request }: Route.ClientActionArgs) => {
   const formData = await request.formData();
@@ -35,7 +30,7 @@ export default function Encode() {
     <Form method="post">
       <div className="mx-8 my-12">
         <div>
-          <InputLabel>Argument Types</InputLabel>
+          <InputLabel htmlFor={FIELDS.types}>{Labels[FIELDS.types]}</InputLabel>
           <InputWrap>
             <input
               type="text"
@@ -45,14 +40,13 @@ export default function Encode() {
               className="w-full bg-transparent border-0"
             />
           </InputWrap>
-          <Description>
-            Add the value types, each seperated by a comma (
-            {Types.slice(0, 2).join(",")}...)
-          </Description>
+          <Description>{Descriptions[FIELDS.types]}</Description>
         </div>
 
         <div className="mt-12">
-          <InputLabel>Encoded data</InputLabel>
+          <InputLabel htmlFor={FIELDS.encoded}>
+            {Labels[FIELDS.encoded]}
+          </InputLabel>
           <InputWrap>
             <textarea
               name={FIELDS.encoded}
@@ -61,7 +55,7 @@ export default function Encode() {
               className="w-full bg-transparent border-0"
             />
           </InputWrap>
-          <Description>Add the encoded data for decoding</Description>
+          <Description>{Descriptions[FIELDS.encoded]}</Description>
         </div>
 
         <ActionButton>Decode data</ActionButton>

@@ -33,6 +33,10 @@ interface Parsable {
     [index: string]: string | any;
 }
 
+export function parseTypes(types: string): string[] {
+    return types.split(",")
+}
+
 export function parseForEncode(values: string): any {
     const matched = matchRegExpValues(values);
 
@@ -66,8 +70,11 @@ export function parseForEncode(values: string): any {
 export function encodeData(types: string, values: string) {
     try {
 
-        let typesList = types.split(",");
+        let typesList = parseTypes(types);
         let parsedValues = parseForEncode(values)
+
+        console.log({ types, values });
+
 
         if (typesList.length !== parsedValues.length)
             throw new Error("Types/values mismatch");
@@ -101,18 +108,16 @@ export function parseDecoded(toParse: Parsable, types?: string[]) {
 
 export function decodeData(types: string, value: string) {
     try {
-        let typesList = types.split(",");
+        let typesList = parseTypes(types);
 
         if (value.indexOf("0x") !== 0)
             value = "0x" + value;
 
-        console.log(types, value, typesList);
+        console.log({ types, value });
 
         let decoded = EthAbi.decodeParameters(typesList, value);
-        console.log("pre--", decoded);
 
         const parsed = parseDecoded(decoded, typesList);
-        console.log(decoded);
 
         return parsed.join(",")
     }
