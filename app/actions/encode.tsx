@@ -1,8 +1,9 @@
-import { useFetcher, data } from "react-router";
+import { useFetcher } from "react-router";
 import Description from "app/actions/components/description";
 import InputLabel from "app/actions/components/inputLabel";
 import InputWrap from "app/actions/components/inputWrap";
 import ActionButton from "app/actions/components/actionButton";
+import Result from "app/actions/components/result";
 import { FIELDS, Labels, Descriptions, Results } from "app/config/fields";
 import type { Route } from "../+types/root";
 import { encodeData } from "app/utils/eth";
@@ -108,6 +109,12 @@ export default function Encode() {
           </ActionButton>
         </div>
       </div>
+
+      {!!data?.[FIELDS.encoded] ? (
+        <Result label={FIELDS.encoded} description={Results[FIELDS.encoded]}>
+          {data[FIELDS.encoded]}
+        </Result>
+      ) : null}
     </fetcher.Form>
   );
 }

@@ -1,8 +1,9 @@
-import { useFetcher, data, Form } from "react-router";
+import { useFetcher } from "react-router";
 import Description from "app/actions/components/description";
 import InputLabel from "app/actions/components/inputLabel";
 import InputWrap from "app/actions/components/inputWrap";
 import ActionButton from "app/actions/components/actionButton";
+import Result from "app/actions/components/result";
 import { FIELDS, Labels, Descriptions, Results } from "app/config/fields";
 import type { Route } from "../+types/root";
 import { decodeData } from "app/utils/eth";
@@ -36,10 +37,7 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
   }
 
   try {
-    const decoded = decodeData(
-      (types || "").toString(),
-      (encoded || "").toString()
-    );
+    const decoded = decodeData(types, encoded);
 
     return { decoded };
   } catch (e: any) {
@@ -59,7 +57,7 @@ export default function Encode() {
   let errors = data?.errors;
 
   return (
-    <Form method="post">
+    <fetcher.Form method="post">
       <div className="mt-8 rounded-sm border border-gray-200 py-4 dark:border-gray-700 space-y-4">
         <div className="mx-8 my-12">
           <div>
@@ -111,6 +109,12 @@ export default function Encode() {
           </ActionButton>
         </div>
       </div>
-    </Form>
+
+      {!!data?.[FIELDS.decoded] ? (
+        <Result label={FIELDS.decoded} description={Results[FIELDS.decoded]}>
+          {data[FIELDS.decoded]}
+        </Result>
+      ) : null}
+    </fetcher.Form>
   );
 }
