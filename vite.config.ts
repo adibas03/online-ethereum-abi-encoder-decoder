@@ -3,7 +3,7 @@ import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import PackageJson from "package.json"
+import PackageJson from "./package.json"
 
 export default defineConfig({
   base: `/${PackageJson.name}/`,
