@@ -2,7 +2,7 @@ import type { HTMLFormMethod } from "react-router";
 import validTypes, { suffixed } from "app/config/types"
 import { testRegExp } from "app/utils/string";
 import { parseForEncode, parseTypes } from "app/utils/eth"
-import { suffixeRegex, suffixCount } from "app/config/types"
+import { numberSuffixed, numberSuffixedDivisor, suffixeRegex, suffixCount } from "app/config/types"
 
 interface MethodObject {
     [index: string]: HTMLFormMethod
@@ -27,7 +27,7 @@ export function validateType(types: string) {
     let clean = true
     let vals = parseTypes(types)
     let array = validTypes.map(function (t) {
-        t = suffixed.indexOf(t) > -1 ? `^${t}${suffixeRegex}` : t;
+        t = suffixed.indexOf(t) > -1 ? `^(${t})${suffixeRegex}` : t;
         return t;
     });
 
@@ -41,9 +41,13 @@ export function validateType(types: string) {
             if (!matched) {
                 clean = false;
             } else {
-                const matchedCount = (v.match(new RegExp(matched)) || [])[1];
+                const matchedVal = v.match(new RegExp(matched))
+                const matchedtype = (matchedVal || [])[1];
+                const matchedCount = (matchedVal || [])[2];
 
-                if (!!matchedCount && (+matchedCount < suffixCount.min || +matchedCount > suffixCount.max)) {
+                if ((!!matchedCount && (+matchedCount < suffixCount.min || +matchedCount > suffixCount.max)
+                    || (numberSuffixed.includes(matchedtype) && +matchedCount % numberSuffixedDivisor > 0)
+                )) {
                     clean = false;
                 }
             }
