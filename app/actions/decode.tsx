@@ -56,7 +56,7 @@ export default function Encode() {
   return (
     <fetcher.Form method="post">
       <div className="mt-8 rounded-sm border border-gray-200 py-4 dark:border-gray-700 space-y-4">
-        <div className="mx-8 my-12">
+        <div className="mx-6 my-12">
           <div>
             <InputLabel
               ariaInvalid={!!errors?.[FIELDS.types]}
