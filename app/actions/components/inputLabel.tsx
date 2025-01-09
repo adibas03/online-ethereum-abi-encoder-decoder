@@ -7,7 +7,7 @@ export default function inputLabel({
   htmlFor,
 }: {
   children: React.ReactNode;
-  className?: React.LabelHTMLAttributes<ClassDecorator>;
+  className?: string;
   htmlFor?: string;
   ariaInvalid?: boolean;
 }) {

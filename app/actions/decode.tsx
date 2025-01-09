@@ -3,15 +3,37 @@ import Description from "app/actions/components/description";
 import InputLabel from "app/actions/components/inputLabel";
 import InputWrap from "app/actions/components/inputWrap";
 import ActionButton from "app/actions/components/actionButton";
-import { FIELDS, Labels, Descriptions } from "app/config/fields";
+import { FIELDS, Labels, Descriptions, Results } from "app/config/fields";
 import type { Route } from "../+types/root";
 import { decodeData } from "app/utils/eth";
+import {
+  isvalidationSubmission,
+  revalidateForm,
+  validateType,
+  validateValueForEncode,
+} from "app/utils/form";
 
 export const clientAction = async ({ request }: Route.ClientActionArgs) => {
   const formData = await request.formData();
 
-  const types = formData.get(FIELDS.types);
-  const encoded = formData.get(FIELDS.encoded);
+  const types = (formData.get(FIELDS.types) || "").toString();
+  const encoded = (formData.get(FIELDS.encoded) || "").toString();
+
+  const errors = {
+    ...(!!types && !validateType(types) ? { [FIELDS.types]: true } : {}),
+    ...(!!encoded && !validateValueForEncode(encoded, types)
+      ? { [FIELDS.encoded]: true }
+      : {}),
+  };
+
+  if (
+    Object.keys(errors).length > 0 ||
+    !types ||
+    !encoded ||
+    isvalidationSubmission(request.method)
+  ) {
+    return { errors };
+  }
 
   try {
     const decoded = decodeData(
@@ -19,46 +41,75 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
       (encoded || "").toString()
     );
 
-    console.log({ decoded });
-  } catch (e) {
+    return { decoded };
+  } catch (e: any) {
     console.error(e);
+
+    return {
+      errors: {
+        [FIELDS.button]: e.message,
+      },
+    };
   }
 };
 
 export default function Encode() {
+  let fetcher = useFetcher();
+  let data = fetcher.data;
+  let errors = data?.errors;
+
   return (
     <Form method="post">
-      <div className="mx-8 my-12">
-        <div>
-          <InputLabel htmlFor={FIELDS.types}>{Labels[FIELDS.types]}</InputLabel>
-          <InputWrap>
-            <input
-              type="text"
-              name={FIELDS.types}
-              id={FIELDS.types}
-              required
-              className="w-full bg-transparent border-0"
-            />
-          </InputWrap>
-          <Description>{Descriptions[FIELDS.types]}</Description>
-        </div>
+      <div className="mt-8 rounded-sm border border-gray-200 py-4 dark:border-gray-700 space-y-4">
+        <div className="mx-8 my-12">
+          <div>
+            <InputLabel
+              ariaInvalid={!!errors?.[FIELDS.types]}
+              htmlFor={FIELDS.types}
+            >
+              {Labels[FIELDS.types]}
+            </InputLabel>
+            <InputWrap ariaInvalid={!!errors?.[FIELDS.types]}>
+              <input
+                type="text"
+                name={FIELDS.types}
+                id={FIELDS.types}
+                required
+                className="w-full bg-transparent border-0"
+                onChange={(e) => revalidateForm(e, fetcher)}
+              />
+            </InputWrap>
+            <Description ariaInvalid={!!errors?.[FIELDS.types]}>
+              {Descriptions[FIELDS.types]}
+            </Description>
+          </div>
 
-        <div className="mt-12">
-          <InputLabel htmlFor={FIELDS.encoded}>
-            {Labels[FIELDS.encoded]}
-          </InputLabel>
-          <InputWrap>
-            <textarea
-              name={FIELDS.encoded}
-              id={FIELDS.encoded}
-              required
-              className="w-full bg-transparent border-0"
-            />
-          </InputWrap>
-          <Description>{Descriptions[FIELDS.encoded]}</Description>
-        </div>
+          <div className="mt-12">
+            <InputLabel
+              ariaInvalid={!!errors?.[FIELDS.encoded]}
+              htmlFor={FIELDS.encoded}
+            >
+              {Labels[FIELDS.encoded]}
+            </InputLabel>
+            <InputWrap ariaInvalid={!!errors?.[FIELDS.encoded]}>
+              <textarea
+                name={FIELDS.encoded}
+                id={FIELDS.encoded}
+                required
+                aria-invalid={!!errors?.[FIELDS.encoded]}
+                className="w-full bg-transparent border-0"
+                onChange={(e) => revalidateForm(e, fetcher)}
+              />
+            </InputWrap>
+            <Description ariaInvalid={!!errors?.[FIELDS.encoded]}>
+              {Descriptions[FIELDS.encoded]}
+            </Description>
+          </div>
 
-        <ActionButton>Decode data</ActionButton>
+          <ActionButton errorMessage={errors?.[FIELDS.button]}>
+            Decode data
+          </ActionButton>
+        </div>
       </div>
     </Form>
   );

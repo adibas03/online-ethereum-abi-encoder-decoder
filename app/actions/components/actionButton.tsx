@@ -19,7 +19,12 @@ export default function actionButton({
           </button>
         </div>
         {errorMessage ? (
-          <Description ariaInvalid={!!errorMessage}>{errorMessage}</Description>
+          <Description
+            ariaInvalid={!!errorMessage}
+            className="aria-invalid:font-semibold"
+          >
+            {errorMessage}
+          </Description>
         ) : null}
       </div>
     </div>

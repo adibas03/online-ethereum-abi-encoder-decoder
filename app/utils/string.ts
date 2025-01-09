@@ -18,14 +18,11 @@ export function matchRegExpValues(values: string) {
 }
 
 export function testRegExp(search: string = "", array: string[]) {
-    let found = 0;
-    array.forEach(function (a) {
+    return array.find(function (a) {
         const regA = new RegExp(a)
-        if (!!regA.test(search) && (search.trim().match(regA) || {}).index === 0) {
-            found++;
-        }
+
+        return (!!regA.test(search) && (search.trim().match(regA) || {}).index === 0)
     });
-    return found;
 }
 
 

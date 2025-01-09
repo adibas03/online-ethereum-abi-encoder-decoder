@@ -34,7 +34,7 @@ interface Parsable {
 }
 
 export function parseTypes(types: string): string[] {
-    return types.split(",")
+    return types.split(",").map(t => t.trim())
 }
 
 export function parseForEncode(values: string): any {
@@ -73,15 +73,19 @@ export function encodeData(types: string, values: string) {
         let typesList = parseTypes(types);
         let parsedValues = parseForEncode(values)
 
-        console.log({ types, values });
-
-
         if (typesList.length !== parsedValues.length)
             throw new Error("Types/values mismatch");
 
-        let encoded = EthAbi.encodeParameters(typesList, parsedValues);
+        console.log({
+            types: typesList,
+            values: parsedValues,
+        });
 
-        return encoded.substring(2);
+        let encoded = EthAbi.encodeParameters(typesList, parsedValues).substring(2);
+
+        console.log({ encoded });
+
+        return encoded;
     }
     catch (e: any) {
         throw new Error(e);
@@ -113,9 +117,16 @@ export function decodeData(types: string, value: string) {
         if (value.indexOf("0x") !== 0)
             value = "0x" + value;
 
-        console.log({ types, value });
+
+        console.log({
+            types: typesList,
+            value,
+        });
+
 
         let decoded = EthAbi.decodeParameters(typesList, value);
+
+        console.log({ decoded });
 
         const parsed = parseDecoded(decoded, typesList);
 

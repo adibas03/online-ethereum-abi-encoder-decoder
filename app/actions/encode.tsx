@@ -3,10 +3,15 @@ import Description from "app/actions/components/description";
 import InputLabel from "app/actions/components/inputLabel";
 import InputWrap from "app/actions/components/inputWrap";
 import ActionButton from "app/actions/components/actionButton";
-import { FIELDS, Labels, Descriptions } from "app/config/fields";
+import { FIELDS, Labels, Descriptions, Results } from "app/config/fields";
 import type { Route } from "../+types/root";
 import { encodeData } from "app/utils/eth";
-import { validateType, validateValueForEncode } from "app/utils/form";
+import {
+  isvalidationSubmission,
+  revalidateForm,
+  validateType,
+  validateValueForEncode,
+} from "app/utils/form";
 
 export const clientAction = async ({ request }: Route.ClientActionArgs) => {
   const formData = await request.formData();
@@ -21,24 +26,17 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
       : {}),
   };
 
-  console.log({
-    errors,
-    types,
-    decoded,
-  });
-
-  if (Object.keys(errors).length > 0) {
+  if (
+    Object.keys(errors).length > 0 ||
+    !types ||
+    !decoded ||
+    isvalidationSubmission(request.method)
+  ) {
     return { errors };
-  }
-
-  if (!types || !decoded) {
-    return;
   }
 
   try {
     const encoded = encodeData(types, decoded);
-
-    console.log({ encoded });
 
     return { encoded };
   } catch (e: any) {
@@ -51,27 +49,10 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
   }
 };
 
-// function validateTypes() {
-//   let fetcher = useFetcher();
-//   console.log({ fetcher });
-//   const formData =  fetcher?.formData || ()=>{};
-
-//   if (!!validateType(types)) {
-//     fetcher.data = {
-//       ...fetcher.data,
-//       errors: {
-//         ...fetcher.data?.errors,
-//         [FIELDS.types]: true,
-//       },
-//     };
-//   }
-
-//   return;
-// }
-
 export default function Encode() {
   let fetcher = useFetcher();
-  let errors = fetcher.data?.errors;
+  let data = fetcher.data;
+  let errors = data?.errors;
 
   return (
     <fetcher.Form method="post">
@@ -92,7 +73,7 @@ export default function Encode() {
                 required
                 aria-invalid={!!errors?.[FIELDS.types]}
                 className="w-full bg-transparent border-0"
-                onChange={(e) => fetcher.submit(e.currentTarget.form)}
+                onChange={(e) => revalidateForm(e, fetcher)}
               />
             </InputWrap>
             <Description ariaInvalid={!!errors?.[FIELDS.types]}>
@@ -114,7 +95,7 @@ export default function Encode() {
                 required
                 aria-invalid={!!errors?.[FIELDS.decoded]}
                 className="w-full bg-transparent border-0"
-                onChange={(e) => fetcher.submit(e.currentTarget.form)}
+                onChange={(e) => revalidateForm(e, fetcher)}
               />
             </InputWrap>
             <Description ariaInvalid={!!errors?.[FIELDS.decoded]}>
