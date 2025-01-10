@@ -1,0 +1,1 @@
+import{l as e}from"./chunk-K6AXKMTT-nVvi_5XD.js";function s(){return e.jsxs("p",{className:"text-sm mt-3 mb-3 text-gray-300",children:["Buy me a Coffee or a Beer ",e.jsx("br",{}),"ETH | DAI | USDT: ",e.jsx("b",{children:"0x965D1C9987BD2c34e151E63d60AFf8E9dB6b1561"})]})}export{s as S};
