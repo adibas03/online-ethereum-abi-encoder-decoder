@@ -10,7 +10,9 @@ export default function Header() {
       <header className="flex flex-col items-center gap-9">
         <div className="w-[350px] max-w-[100vw] p-4 text-center">
           <div className="mt-8">
-            <NavLink to="/">Online Ethereum abi encoder and decoder</NavLink>
+            <NavLink to={`/${packageInfo.name}/`}>
+              Online Ethereum abi encoder and decoder
+            </NavLink>
             <Descriptions>
               web-eth@{packageInfo.packages["node_modules/web3-eth"].version}
             </Descriptions>

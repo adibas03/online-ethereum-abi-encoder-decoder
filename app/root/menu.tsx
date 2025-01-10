@@ -1,4 +1,5 @@
 import { NavLink } from "react-router";
+import PackageJson from "../../package.json";
 import { capitalize } from "app/utils/string";
 import allActions from "app/config/actions";
 
@@ -10,7 +11,7 @@ export default function Menu() {
           {allActions.map((a) => (
             <NavLink
               key={a}
-              to={`/${a}`}
+              to={`/${PackageJson.name}/${a}`}
               className={({ isActive }) =>
                 [
                   isActive ? "dark:border-gray-200" : "dark:border-gray-700",
