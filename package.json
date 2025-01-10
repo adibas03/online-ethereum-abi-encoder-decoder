@@ -10,6 +10,7 @@
     "clean": "rm -rf node_modules build",
     "typecheck": "react-router typegen && tsc"
   },
+  "homepage": "https://adibas03.github.io/online-ethereum-abi-encoder-decoder/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adibas03/online-ethereum-abi-encoder.git"
@@ -56,7 +57,6 @@
   "bugs": {
     "url": "https://github.com/adibas03/online-ethereum-abi-encoder/issues"
   },
-  "homepage": "./",
   "browserslist": {
     "production": [
       ">0.2%",
