@@ -1,12 +1,16 @@
 # online-ethereum-abi-encoder-decoder
-#### online-ethereum-abi-encoder-decoder  
 
-A quick online tool to abi-encode constructor arguments used in solidity. The encoded data can be used to deploy the contract or verify the contract on Etherscan : https://ropsten.etherscan.io/verifyContract
+#### online-ethereum-abi-encoder-decoder
+
+A quick online tool to abi-encode constructor arguments used in solidity. The encoded data can be used to deploy the contract or verify the contract on Etherscan : https://etherscan.io/verifyContract
 
 ## Usage
+
 ### Encode
+
 - Add the value types, each seperated by a comma
-- Add the values to match the number of types entered, each seperated by a comma `,` (No spaces), using square brakets `[]` to wrap arrays  
+- Add the values to match the number of types entered, each seperated by a comma `,` (No spaces), using square brakets `[]` to wrap arrays
+
 ```
 Types:
 address,uint256,address[],uint256[]
@@ -16,8 +20,9 @@ Values:
 ```
 
 ### Decode
+
 - Add the value types, each seperated by a comma
-- Add the encoded data to be decoded  
+- Add the encoded data to be decoded
 
 ```
 Types:
@@ -28,11 +33,14 @@ Encoded data:
 ```
 
 ## url
+
 [Live / Demo](https://adibas03.github.io/online-ethereum-abi-encoder-decoder/)
 
 ## Contribute
+
 https://github.com/adibas03/online-ethereum-abi-encoder-decoder/issues
 
 ## Contribution
-Buy me a Coffe or a Beer  
+
+Buy me a Coffee or a Beer  
 Ethereum: **0x965D1C9987BD2c34e151E63d60AFf8E9dB6b1561**
