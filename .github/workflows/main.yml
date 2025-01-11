@@ -32,9 +32,11 @@ jobs:
           cp build/client/index.html build/client/404.html
           ls -al build/client
 
+      - name: Upload static files as artifact
+        id: gh-deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: "build/client"
+
       - name: GitHub Pages Deploy Action
         uses: actions/deploy-pages@v4
-        env:
-          token: ${{ secrets.GHB_DEFAULT_TOKEN }}
-        with: # optional
-          folder: "build/client"
