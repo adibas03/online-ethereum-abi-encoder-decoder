@@ -1,15 +1,16 @@
 {
-  "name": "online-ethereum-abi-encoder",
-  "version": "1.1.1",
+  "name": "online-ethereum-abi-encoder-decoder",
+  "version": "2.0.0",
   "description": "A quick online tool to abi-encode constructor arguments used in ethereum's solidity",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "lint": "eslint .",
-    "start": "react-scripts start",
-    "test": "npm run lint"
+    "build": "cross-env NODE_ENV=production react-router build",
+    "dev": "react-router dev",
+    "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
+    "clean": "rm -rf node_modules build",
+    "typecheck": "react-router typegen && tsc"
   },
+  "homepage": "https://adibas03.github.io/online-ethereum-abi-encoder-decoder/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adibas03/online-ethereum-abi-encoder.git"
@@ -30,27 +31,32 @@
     "email": "adibas03@gmail.com"
   },
   "dependencies": {
-    "@material-ui/core": "^3.9.3",
-    "web3-eth": "^1.2.0"
+    "@react-router/node": "^7.1.1",
+    "@react-router/serve": "^7.1.1",
+    "isbot": "^5.1.17",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.1.1",
+    "web3-eth": "^4.11.1",
+    "web3-eth-abi": "^4.4.1"
   },
   "devDependencies": {
-    "eslint": "^6.2.0",
-    "jss": "9.8.7",
-    "jss-preset-default": "4.5.0",
-    "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-alert": "^5.5.0",
-    "react-dom": "^16.9.0",
-    "react-jss": "8.6.1",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.1.1",
-    "recompose": "0.30.0"
+    "@react-router/dev": "^7.1.1",
+    "@types/node": "^20",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/adibas03/online-ethereum-abi-encoder/issues"
   },
-  "homepage": "./",
   "browserslist": {
     "production": [
       ">0.2%",
