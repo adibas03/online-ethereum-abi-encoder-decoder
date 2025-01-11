@@ -1,0 +1,1 @@
+import{w as t}from"./with-props-CDxDMfRq.js";import{l as o}from"./chunk-K6AXKMTT-nVvi_5XD.js";import{W as r}from"./welcome-CE2G3whe.js";import{t as e,d as m}from"./app-DC3zjmRc.js";import"./sponsor-CgSd60vr.js";function f({}){return[{title:e},{name:"description",content:m}]}const u=t(function(){return o.jsx(r,{})});export{u as default,f as meta};
