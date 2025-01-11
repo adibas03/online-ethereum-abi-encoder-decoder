@@ -17,7 +17,14 @@ export default function Result({
       <div className="mx-6 my-8">
         <InputLabel>{capitalize(label)}</InputLabel>
         <InputWrap>
-          <div className="text-balance break-words">{children}</div>
+          <div
+            className="text-balance break-words"
+            onClick={(e) =>
+              document.getSelection()?.selectAllChildren(e.target as any)
+            }
+          >
+            {children}
+          </div>
         </InputWrap>
         <Description>{description}</Description>
       </div>
