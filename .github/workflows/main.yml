@@ -32,9 +32,7 @@ jobs:
           cp build/client/index.html build/client/404.html
           ls -al build/client
 
-      - name: Simple deploy with git
-        uses: rdarida/simple-github-pages-deploy-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GHB_DEFAULT_TOKEN }}
+      - name: GitHub Pages Deploy Action
+        uses: JamesIves/github-pages-deploy-action@v4
         with: # optional
-          git-base-folder: "build/client"
+          folder: "build/client"
