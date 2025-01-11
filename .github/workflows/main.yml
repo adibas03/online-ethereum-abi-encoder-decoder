@@ -33,6 +33,8 @@ jobs:
           ls -al build/client
 
       - name: GitHub Pages Deploy Action
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: actions/deploy-pages@v4
+        env:
+          token: ${{ secrets.GHB_DEFAULT_TOKEN }}
         with: # optional
           folder: "build/client"
